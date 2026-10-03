@@ -3,27 +3,72 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pureico · Private ICO &amp; ICNS icon maker</title>
+    <title>Pureico · Free PNG to ICO &amp; ICNS Converter (Private, Offline)</title>
     <meta
       name="description"
-      content="Convert PNG, JPG, SVG and WebP into Windows .ico, macOS .icns and browser-extension icons. Runs entirely in your browser: your files are never uploaded."
+      content="Convert PNG, JPG, SVG or WebP to ICO, ICNS and browser-extension icons in your browser. Free, no uploads, works offline. Favicons, Windows and macOS app icons."
     />
+    <meta name="author" content="Intercepth" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#111116" />
     <link rel="canonical" href="https://pureico.intercepth.dev/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Pureico" />
-    <meta property="og:title" content="Pureico · Private ICO & ICNS icon maker" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Pureico · Free PNG to ICO & ICNS Converter" />
     <meta
       property="og:description"
-      content="Make .ico, .icns and extension icons right in your browser. Nothing is uploaded."
+      content="Make favicons, Windows .ico, macOS .icns and extension icons right in your browser. Private, free and works offline."
     />
     <meta property="og:url" content="https://pureico.intercepth.dev/" />
     <meta property="og:image" content="https://pureico.intercepth.dev/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Pureico: a pixel-art ringed planet beside the words Private ICO, ICNS and extension icons"
+    />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pureico · Free PNG to ICO & ICNS Converter" />
+    <meta
+      name="twitter:description"
+      content="Favicons, Windows .ico, macOS .icns and extension icons, made in your browser. Nothing is uploaded."
+    />
+    <meta name="twitter:image" content="https://pureico.intercepth.dev/og-image.png" />
+    <meta
+      name="twitter:image:alt"
+      content="Pureico: a pixel-art ringed planet beside the words Private ICO, ICNS and extension icons"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Pureico",
+        "url": "https://pureico.intercepth.dev/",
+        "description": "Free, private converter that turns PNG, JPG, SVG and WebP images into Windows .ico, macOS .icns and browser-extension icons, entirely in the browser.",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Any modern web browser",
+        "browserRequirements": "Requires JavaScript, Web Workers and OffscreenCanvas.",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "featureList": [
+          "PNG, JPG, SVG and WebP input",
+          "Multi-size .ico files from 16 to 256 px",
+          "macOS .icns files from 16 to 1024 px, including Retina sizes",
+          "Browser extension PNGs with a Manifest V3 snippet",
+          "Batch conversion of up to 20 images into one zip",
+          "Runs offline; images never leave the device"
+        ],
+        "image": "https://pureico.intercepth.dev/og-image.png",
+        "creator": {
+          "@type": "Organization",
+          "name": "Intercepth",
+          "url": "https://github.com/intercepth"
+        }
+      }
+    </script>
 
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -66,13 +111,16 @@
               <span class="status-dot" aria-hidden="true"></span>
               <span class="status-text">Preparing offline mode…</span>
             </p>
-            <a
-              class="text-link"
-              href="https://github.com/intercepth/Pureico"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Read the source on GitHub <span aria-hidden="true">↗</span></a
-            >
+            <p class="privacy-links">
+              <a class="text-link" href="/privacy/">Privacy policy</a>
+              <a
+                class="text-link"
+                href="https://github.com/intercepth/Pureico"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Source on GitHub <span aria-hidden="true">↗</span></a
+              >
+            </p>
           </div>
         </div>
         <a
@@ -105,10 +153,11 @@
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="eyebrow">ICO · ICNS · Extension icons</p>
-          <h1 id="hero-title">Crisp icons, forged on your device.</h1>
+          <h1 id="hero-title">Crisp .ico &amp; .icns icons, forged on your device.</h1>
           <p class="hero-lead">
-            Turn PNG, JPG, SVG or WebP into Windows <code>.ico</code>, macOS <code>.icns</code> and
-            browser-extension icons. Nothing is uploaded. Ever.
+            A free PNG to ICO converter and favicon generator that also makes macOS
+            <code>.icns</code> files and browser-extension icons from PNG, JPG, SVG or WebP. Nothing
+            is uploaded. Ever.
           </p>
         </div>
         <div class="hero-art" aria-hidden="true">
@@ -341,6 +390,69 @@
         <ul class="recent-list"></ul>
       </section>
 
+      <section class="faq" aria-labelledby="faq-title">
+        <h2 class="panel-title" id="faq-title">Questions, answered</h2>
+        <p class="faq-intro">Everything you need to know about making icons with Pureico.</p>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Are my images uploaded anywhere?</summary>
+            <p>
+              No. Pureico reads and converts your images inside your browser, in a background Web
+              Worker. There is no server that could receive them, and the page’s Content Security
+              Policy blocks it from sending data anywhere. It even works with your internet
+              connection switched off.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Which sizes should a favicon.ico include?</summary>
+            <p>
+              For a website, 16, 32 and 48 px cover browser tabs, bookmarks and Windows shortcuts:
+              that is the Favicon preset. Windows desktop apps also need a 256 px image, which the
+              Desktop app preset adds. Pureico stores the small sizes as classic bitmaps so even old
+              software can read them.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>How do I make an .icns file for a macOS app?</summary>
+            <p>
+              Turn on macOS .icns. Pureico packs Apple’s full set, from 16 to 1024 px including
+              Retina sizes, into one file you can use with tools such as electron-builder’s
+              <code>mac.icon</code> setting or PyInstaller’s <code>--icon</code> option for PySide6
+              and PyQt apps. For the sharpest result, start from a 1024 px image or an SVG.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Can I make icons for a Chrome or Firefox extension?</summary>
+            <p>
+              Yes. Turn on Browser extension PNGs to get 16, 32, 48 and 128 px PNG files plus a
+              Manifest V3 snippet whose paths match the files in your download.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Why does my icon look blurry at 16 px?</summary>
+            <p>
+              A 16 × 16 icon has only 256 pixels, so fine details and thin lines disappear. Simplify
+              the artwork, use bold shapes and strong contrast, and check both the dark and light
+              tab previews before you download.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Can I convert several images at once?</summary>
+            <p>
+              Yes. Drop up to 20 images and Pureico creates a single zip file with a folder for each
+              one.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Is Pureico free?</summary>
+            <p>
+              Yes: no sign-up, no watermarks and no ads. If it saves you time, you can support it on
+              Ko-fi.
+            </p>
+          </details>
+        </div>
+      </section>
+
       <section class="donate" aria-labelledby="donate-title">
         <div class="donate-art" aria-hidden="true">
           <span class="donate-cup" data-sprite="cup"></span>
@@ -365,15 +477,18 @@
 
     <footer class="site-footer">
       <p class="footer-season"></p>
-      <p class="footer-links">
-        <span>Pureico · MIT licensed</span>
+      <nav class="footer-links" aria-label="Footer">
+        <span>© 2026 Pureico</span>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="mailto:mk7373xy@gmail.com">Contact</a>
         <a href="https://github.com/intercepth/Pureico" target="_blank" rel="noopener noreferrer"
           >Source</a
         >
         <a href="https://ko-fi.com/intercepth" target="_blank" rel="noopener noreferrer"
           >Support on Ko-fi</a
         >
-      </p>
+      </nav>
     </footer>
 
     <div class="toast" role="status" hidden>

@@ -44,6 +44,21 @@ send data anywhere.
 - The end-to-end tests record every request made during a conversion and fail if any of them is
   not a plain `GET` to the site itself.
 
+The full [privacy policy](https://pureico.intercepth.dev/privacy/) and
+[terms of use](https://pureico.intercepth.dev/terms/) are published on the site.
+
+## Security and accessibility
+
+- Strict Content Security Policy, plus HSTS, `nosniff`, `frame-ancestors 'none'`, a locked-down
+  Permissions Policy and `no-referrer` headers on Cloudflare Pages.
+- Files are identified by their contents, size- and dimension-checked before decoding, and SVGs
+  are only ever rendered as images, so their scripts can't run.
+- Automated [axe-core](https://github.com/dequelabs/axe-core) checks run against WCAG 2.2 AA in
+  both themes as part of the end-to-end tests.
+- Dependabot keeps dependencies and GitHub Actions up to date.
+
+Found a vulnerability? Please follow the [security policy](SECURITY.md).
+
 ## Development
 
 Requires Node.js 22.12 or newer.
@@ -67,6 +82,8 @@ The first `npm run test:e2e` may need `npx playwright install chromium`.
 | `src/app/`, `src/ui/` | App state and the interface                                             |
 | `src/art/`            | Pixel art, defined as editable text grids                               |
 | `src/sw/`             | Service worker template                                                 |
+| `privacy/`, `terms/`  | Privacy policy and terms of use pages                                   |
+| `public/`             | Icons, manifest, `robots.txt`, `sitemap.xml`, `security.txt`, notices   |
 | `build/plugins.ts`    | Build steps for the Content Security Policy, headers and offline cache  |
 | `tests/unit/`         | Vitest unit tests                                                       |
 | `tests/e2e/`          | Playwright end-to-end tests                                             |
@@ -93,6 +110,11 @@ Current versions of Chrome, Edge, Firefox and Safari (16.4 or newer). Pureico ne
 Pureico is free, with no ads and no trackers. If it saved you time, you can
 [support it on Ko-fi](https://ko-fi.com/intercepth).
 
+## Contact
+
+Questions or feedback: [mk7373xy@gmail.com](mailto:mk7373xy@gmail.com)
+
 ## License
 
-[MIT](LICENSE) © 2026 Intercepth
+[MIT](LICENSE) © 2026 Intercepth. Bundled fonts and libraries keep their own licenses; see
+[`public/third-party-licenses.txt`](public/third-party-licenses.txt).

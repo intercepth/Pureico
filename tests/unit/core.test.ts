@@ -21,6 +21,15 @@ describe('baseName', () => {
   it('caps long names', () => {
     expect(baseName(`${'a'.repeat(100)}.png`)).toHaveLength(64);
   });
+
+  it.each(['../../etc/passwd.png', '..\\..\\boot.ini.png', '/abs/path/logo.svg', 'C:\\x\\y.png'])(
+    'never produces a path that could escape a zip folder: %s',
+    (input) => {
+      const name = baseName(input);
+      expect(name).not.toMatch(/[\\/]/);
+      expect(name).not.toMatch(/^\./);
+    },
+  );
 });
 
 describe('uniqueNames', () => {

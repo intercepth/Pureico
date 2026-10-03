@@ -1,23 +1,14 @@
-import '@fontsource-variable/pixelify-sans';
-import '@fontsource-variable/space-grotesk';
-import './styles/tokens.css';
-import './styles/base.css';
-import './styles/components.css';
-import './styles/motion.css';
-
 import { Controller, loadPrefs } from './app/controller';
 import { RecentStore } from './app/recent';
 import { Store } from './app/state';
-import { renderSeason, renderStarfield } from './art/sky';
-import { hydrateSprites } from './art/sprites';
 import { DEFAULT_FORMATS, DEFAULT_ICO_SIZES } from './core/sizes';
 import { $ } from './lib/dom';
 import { defaultPoolSize, WorkerPool } from './lib/pool';
-import { registerServiceWorker } from './pwa/register';
+import { initShell } from './shell';
 import { initDownload } from './ui/download';
 import { initDropzone } from './ui/dropzone';
 import { initFileList } from './ui/files';
-import { initInstallButton, initPrivacyPanel, initThemeToggle } from './ui/header';
+import { initInstallButton, initPrivacyPanel } from './ui/header';
 import { Messages } from './ui/messages';
 import { initOutputs } from './ui/outputs';
 import { initPreview } from './ui/preview';
@@ -33,10 +24,7 @@ function sessionStore(): Storage | null {
 }
 
 function start(): void {
-  hydrateSprites();
-  renderStarfield($('.sky'));
-  renderSeason();
-  initThemeToggle();
+  initShell();
   initPrivacyPanel();
   initInstallButton();
 
@@ -79,4 +67,3 @@ function start(): void {
 }
 
 start();
-registerServiceWorker();

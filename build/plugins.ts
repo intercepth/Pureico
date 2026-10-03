@@ -21,6 +21,7 @@ export const CONTENT_SECURITY_POLICY = [
 /** Response headers for Cloudflare Pages (`_headers`). */
 const HEADERS = `/*
   Content-Security-Policy: frame-ancestors 'none'
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
@@ -35,7 +36,14 @@ const HEADERS = `/*
 `;
 
 /** Files that are served but not needed offline. */
-const SKIP_PRECACHE = new Set(['sw.js', '_headers', 'robots.txt', 'og-image.png']);
+const SKIP_PRECACHE = new Set([
+  'sw.js',
+  '_headers',
+  'robots.txt',
+  'sitemap.xml',
+  'og-image.png',
+  '.well-known/security.txt',
+]);
 
 /** Adds the Content Security Policy to the built page. Dev keeps Vite's inline styles working. */
 export function contentSecurityPolicy(): Plugin {
@@ -82,7 +90,9 @@ export function serviceWorker(template: string): Plugin {
         const path = relative(outDir, file).split(sep).join('/');
         if (SKIP_PRECACHE.has(path) || path.endsWith('.map')) continue;
         hash.update(path).update(readFileSync(file));
-        assets.push(path === 'index.html' ? '/' : `/${path}`);
+        // Pages are cached under their clean URL (`privacy/index.html` → `/privacy/`),
+        // because hosts like Cloudflare Pages redirect the `index.html` form.
+        assets.push(`/${path.replace(/(^|\/)index\.html$/, '$1')}`);
       }
       const source = readFileSync(template, 'utf8')
         .replace('__VERSION__', hash.digest('hex').slice(0, 12))
