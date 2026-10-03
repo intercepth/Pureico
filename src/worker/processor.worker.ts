@@ -109,9 +109,7 @@ async function processItem(request: ProcessRequest): Promise<void> {
       )
     : undefined;
   const icns = request.icns
-    ? encodeIcns(
-        ICNS_SIZES.map((size) => ({ size, png: pngs.get(size)!, rgba: pixels.get(size) })),
-      )
+    ? encodeIcns(ICNS_SIZES.map((size) => ({ size, png: pngs.get(size)!, rgba: pixels.get(size) })))
     : undefined;
 
   const result: ProcessResult = {

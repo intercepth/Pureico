@@ -167,7 +167,9 @@ export class WorkerPool {
       slot.loaded.clear();
       const job = slot.running;
       slot.running = null;
-      job?.reject(new WorkerError({ code: 'internal', message: event.message || 'Worker crashed' }));
+      job?.reject(
+        new WorkerError({ code: 'internal', message: event.message || 'Worker crashed' }),
+      );
       this.pump(slot);
     });
     slot.worker = worker;

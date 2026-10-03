@@ -1,0 +1,118 @@
+:root {
+  color-scheme: dark;
+
+  --bg: #111116;
+  --bg-glow: rgba(124, 58, 237, 0.16);
+  --surface: rgba(28, 28, 37, 0.86);
+  --surface-solid: #1c1c25;
+  --surface-2: #23232f;
+  --surface-3: #2c2c3b;
+  --border: #33334a;
+  --border-strong: #4d4b6b;
+  --text: #ecebf7;
+  --text-muted: #aeabc8;
+  --text-faint: #8a87a6;
+  --accent: #a78bfa;
+  --accent-strong: #c4b5fd;
+  --accent-fill: #7c3aed;
+  --accent-fill-hover: #6d28d9;
+  --on-accent: #ffffff;
+  --accent-soft: rgba(167, 139, 250, 0.14);
+  --accent-glow: rgba(167, 139, 250, 0.45);
+  --star: #fcd34d;
+  --on-star: #1d1600;
+  --warn-bg: rgba(167, 139, 250, 0.12);
+  --warn-border: rgba(167, 139, 250, 0.7);
+  --warn-text: #e4dcff;
+  --focus: #fcd34d;
+  --checker-a: #2a2a38;
+  --checker-b: #22222e;
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  --border-width: 1px;
+
+  /* Pixel-art palette (see src/art/sprites.ts). */
+  --px-w: #f4f2ff;
+  --px-a: #c4b5fd;
+  --px-b: #8b5cf6;
+  --px-c: #5b21b6;
+  --px-y: #fcd34d;
+  --px-o: #f59e0b;
+  --px-s: #8b88a8;
+  --px-i: #111116;
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --font-display: 'Pixelify Sans Variable', ui-monospace, monospace;
+  --font-body: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #fbfaff;
+  --bg-glow: rgba(91, 33, 182, 0.08);
+  --surface: rgba(255, 255, 255, 0.94);
+  --surface-solid: #ffffff;
+  --surface-2: #f3f0ff;
+  --surface-3: #e7e1fb;
+  --border: #4a4466;
+  --border-strong: #2a2540;
+  --text: #0d0b1a;
+  --text-muted: #39345a;
+  --text-faint: #4f4a6e;
+  --accent: #5b21b6;
+  --accent-strong: #4c1d95;
+  --accent-fill: #5b21b6;
+  --accent-fill-hover: #4c1d95;
+  --on-accent: #ffffff;
+  --accent-soft: rgba(91, 33, 182, 0.09);
+  --accent-glow: rgba(91, 33, 182, 0.3);
+  --star: #b45309;
+  --on-star: #ffffff;
+  --warn-bg: #f3edff;
+  --warn-border: #5b21b6;
+  --warn-text: #3b0f80;
+  --focus: #5b21b6;
+  --checker-a: #e9e5f7;
+  --checker-b: #ffffff;
+  --shadow: 0 12px 30px rgba(45, 30, 90, 0.12);
+  --border-width: 1.5px;
+
+  --px-w: #c4b5fd;
+  --px-a: #8b5cf6;
+  --px-b: #6d28d9;
+  --px-c: #3b0f80;
+  --px-y: #f59e0b;
+  --px-o: #b45309;
+  --px-s: #6b6688;
+  --px-i: #ffffff;
+}
+
+.px-w {
+  fill: var(--px-w);
+}
+.px-a {
+  fill: var(--px-a);
+}
+.px-b {
+  fill: var(--px-b);
+}
+.px-c {
+  fill: var(--px-c);
+}
+.px-y {
+  fill: var(--px-y);
+}
+.px-o {
+  fill: var(--px-o);
+}
+.px-s {
+  fill: var(--px-s);
+}
+.px-i {
+  fill: var(--px-i);
+}

@@ -1,12 +1,361 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pureico</title>
+    <title>Pureico · Private ICO &amp; ICNS icon maker</title>
+    <meta
+      name="description"
+      content="Convert PNG, JPG, SVG and WebP into Windows .ico, macOS .icns and browser-extension icons. Runs entirely in your browser: your files are never uploaded."
+    />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#111116" />
+    <link rel="canonical" href="https://pureico.intercepth.dev/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Pureico" />
+    <meta property="og:title" content="Pureico · Private ICO & ICNS icon maker" />
+    <meta
+      property="og:description"
+      content="Make .ico, .icns and extension icons right in your browser. Nothing is uploaded."
+    />
+    <meta property="og:url" content="https://pureico.intercepth.dev/" />
+    <meta property="og:image" content="https://pureico.intercepth.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <script src="/theme-init.js"></script>
   </head>
   <body>
-    <main id="app"></main>
+    <a class="skip-link" href="#converter">Skip to the converter</a>
+    <div class="sky" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Pureico home">
+        <span class="brand-mark" data-sprite="planet"></span>
+        <span class="brand-name">Pureico</span>
+      </a>
+      <div class="header-actions">
+        <div class="privacy">
+          <button
+            class="privacy-badge"
+            type="button"
+            aria-expanded="false"
+            aria-controls="privacy-panel"
+          >
+            <span class="badge-icon" data-sprite="shield"></span>
+            <span class="badge-text">100% Offline</span>
+          </button>
+          <div class="privacy-panel" id="privacy-panel" role="dialog" aria-label="Privacy" hidden>
+            <p class="panel-title">Your files never leave your device</p>
+            <ul class="privacy-list">
+              <li>Every conversion runs inside your browser, on a background Web Worker.</li>
+              <li>No uploads, no analytics, no cookies, no third-party scripts or fonts.</li>
+              <li>
+                A strict Content Security Policy stops this page from talking to any other server.
+              </li>
+              <li>After the first visit Pureico works offline. Try it in airplane mode.</li>
+            </ul>
+            <p class="offline-status" data-state="pending">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span class="status-text">Preparing offline mode…</span>
+            </p>
+            <a
+              class="text-link"
+              href="https://github.com/intercepth/Pureico"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Read the source on GitHub <span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </div>
+        <a
+          class="support-link"
+          href="https://ko-fi.com/intercepth"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="support-icon" data-sprite="heart"></span>
+          <span class="support-text">Support</span>
+        </a>
+        <button class="install-button" type="button" hidden>Install app</button>
+        <button
+          class="theme-toggle"
+          type="button"
+          role="switch"
+          aria-checked="false"
+          aria-label="Light mode"
+        >
+          <span class="theme-track" aria-hidden="true">
+            <span class="theme-icon theme-moon" data-sprite="moon"></span>
+            <span class="theme-icon theme-sun" data-sprite="sun"></span>
+            <span class="theme-knob"></span>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">ICO · ICNS · Extension icons</p>
+          <h1 id="hero-title">Crisp icons, forged on your device.</h1>
+          <p class="hero-lead">
+            Turn PNG, JPG, SVG or WebP into Windows <code>.ico</code>, macOS <code>.icns</code> and
+            browser-extension icons. Nothing is uploaded. Ever.
+          </p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="constellation"></div>
+          <span class="hero-planet" data-sprite="planet"></span>
+        </div>
+      </section>
+
+      <div class="workspace" id="converter">
+        <section class="panel panel-input" aria-labelledby="input-title">
+          <h2 class="panel-title" id="input-title">
+            <span class="step">1</span> Load your artwork
+          </h2>
+          <input
+            class="visually-hidden"
+            id="file-input"
+            type="file"
+            accept="image/png,image/jpeg,image/svg+xml,image/webp,.png,.jpg,.jpeg,.svg,.webp"
+            multiple
+          />
+          <label class="dropzone" for="file-input">
+            <svg class="dropzone-border" aria-hidden="true">
+              <rect width="100%" height="100%" rx="22" ry="22" />
+            </svg>
+            <span class="dropzone-rocket" data-sprite="rocket"></span>
+            <span class="dropzone-title">Drop images here</span>
+            <span class="dropzone-sub"
+              >or <span class="dropzone-browse">browse files</span>, or paste with
+              <kbd>Ctrl</kbd>&nbsp;+&nbsp;<kbd>V</kbd></span
+            >
+            <span class="dropzone-hint" id="drop-hint"
+              >PNG, JPG, SVG, WebP · up to 5 MB each · up to 20 at once</span
+            >
+          </label>
+          <div class="messages" data-region="input"></div>
+
+          <div class="files" hidden>
+            <div class="files-head">
+              <h3 class="files-title">Your images</h3>
+              <button class="text-button files-clear" type="button">Clear all</button>
+            </div>
+            <ul class="file-list"></ul>
+          </div>
+
+          <div class="shape" hidden>
+            <h3 class="sub-title">Shape</h3>
+            <div class="segmented" role="radiogroup" aria-label="How to make the image square">
+              <button type="button" role="radio" aria-checked="true" data-mode="fit">Fit</button>
+              <button type="button" role="radio" aria-checked="false" data-mode="crop">Crop</button>
+            </div>
+            <p class="shape-note"></p>
+            <div class="crop-stage">
+              <div class="crop-frame">
+                <img class="crop-image" alt="" draggable="false" />
+                <div
+                  class="crop-box"
+                  tabindex="0"
+                  role="group"
+                  aria-label="Crop area. Use arrow keys to move, plus and minus to resize."
+                  hidden
+                >
+                  <span class="crop-handle" data-handle="nw"></span>
+                  <span class="crop-handle" data-handle="ne"></span>
+                  <span class="crop-handle" data-handle="sw"></span>
+                  <span class="crop-handle" data-handle="se"></span>
+                </div>
+              </div>
+            </div>
+            <button class="text-button crop-reset" type="button" hidden>Reset crop</button>
+          </div>
+        </section>
+
+        <section class="panel panel-output" aria-labelledby="preview-title">
+          <h2 class="panel-title" id="preview-title"><span class="step">2</span> Preview</h2>
+          <div class="preview">
+            <div class="browser-mocks">
+              <figure class="browser-mock" data-tone="dark">
+                <div class="mock-tabs">
+                  <div class="mock-tab is-active">
+                    <img class="mock-favicon" width="16" height="16" alt="" />
+                    <span class="mock-title">My Project</span>
+                    <span class="mock-close" aria-hidden="true">×</span>
+                  </div>
+                  <div class="mock-tab">
+                    <span class="mock-favicon mock-placeholder"></span>
+                    <span class="mock-title">Inbox</span>
+                  </div>
+                </div>
+                <div class="mock-bar"><span class="mock-url">your-site.com</span></div>
+                <figcaption class="visually-hidden">Dark browser tab preview</figcaption>
+              </figure>
+              <figure class="browser-mock" data-tone="light">
+                <div class="mock-tabs">
+                  <div class="mock-tab is-active">
+                    <img class="mock-favicon" width="16" height="16" alt="" />
+                    <span class="mock-title">My Project</span>
+                    <span class="mock-close" aria-hidden="true">×</span>
+                  </div>
+                  <div class="mock-tab">
+                    <span class="mock-favicon mock-placeholder"></span>
+                    <span class="mock-title">Inbox</span>
+                  </div>
+                </div>
+                <div class="mock-bar"><span class="mock-url">your-site.com</span></div>
+                <figcaption class="visually-hidden">Light browser tab preview</figcaption>
+              </figure>
+            </div>
+            <div class="zoom">
+              <div class="zoom-frame">
+                <img class="zoom-image" width="16" height="16" alt="" />
+              </div>
+              <div class="zoom-copy">
+                <p class="zoom-title">16 × 16, pixel for pixel</p>
+                <p class="zoom-text">
+                  This is exactly what browsers show in a tab. Small details vanish at this size, so
+                  bold shapes read best.
+                </p>
+                <button class="text-button try-tab" type="button" disabled>
+                  Try it in this tab
+                </button>
+              </div>
+            </div>
+            <div class="messages" data-region="item"></div>
+          </div>
+
+          <h2 class="panel-title"><span class="step">3</span> Output</h2>
+          <fieldset class="formats">
+            <legend class="sub-title">Formats</legend>
+            <label class="toggle-row">
+              <input type="checkbox" role="switch" name="format" value="ico" />
+              <span class="toggle-copy">
+                <span class="toggle-label">Windows <code>.ico</code></span>
+                <span class="toggle-help">Favicons and desktop apps</span>
+              </span>
+              <span class="switch" aria-hidden="true"><span class="switch-knob"></span></span>
+            </label>
+            <label class="toggle-row">
+              <input type="checkbox" role="switch" name="format" value="icns" />
+              <span class="toggle-copy">
+                <span class="toggle-label">macOS <code>.icns</code></span>
+                <span class="toggle-help">Apple's full 16–1024 px set, Retina included</span>
+              </span>
+              <span class="switch" aria-hidden="true"><span class="switch-knob"></span></span>
+            </label>
+            <label class="toggle-row">
+              <input type="checkbox" role="switch" name="format" value="ext" />
+              <span class="toggle-copy">
+                <span class="toggle-label">Browser extension PNGs</span>
+                <span class="toggle-help">Manifest V3 · 16, 32, 48 and 128 px</span>
+              </span>
+              <span class="switch" aria-hidden="true"><span class="switch-knob"></span></span>
+            </label>
+          </fieldset>
+
+          <fieldset class="sizes">
+            <legend class="sub-title">ICO sizes</legend>
+            <div class="presets" role="group" aria-label="Size presets">
+              <button class="chip" type="button" data-preset="favicon" aria-pressed="false">
+                Favicon <span class="chip-detail">16 · 32 · 48</span>
+              </button>
+              <button class="chip" type="button" data-preset="desktop" aria-pressed="false">
+                Desktop app <span class="chip-detail">+ 256</span>
+              </button>
+            </div>
+            <div class="size-grid"></div>
+          </fieldset>
+
+          <h2 class="panel-title"><span class="step">4</span> Download</h2>
+          <div class="download" aria-live="polite">
+            <div class="download-status">
+              <span class="moon-loader" hidden></span>
+              <p class="download-text">Drop an image to begin.</p>
+            </div>
+            <div class="download-actions"></div>
+            <div class="messages" data-region="output"></div>
+            <p class="thanks" hidden>
+              <span class="thanks-icon" data-sprite="sparkle"></span>
+              Downloaded! If Pureico saved you time,
+              <a href="https://ko-fi.com/intercepth" target="_blank" rel="noopener noreferrer"
+                >fuel the mission on Ko-fi</a
+              >.
+            </p>
+          </div>
+          <div class="manifest" hidden>
+            <div class="manifest-head">
+              <h3 class="sub-title">manifest.json snippet</h3>
+              <button class="chip manifest-copy" type="button">Copy</button>
+            </div>
+            <pre class="manifest-code"><code></code></pre>
+            <p class="manifest-note">
+              Paste it inside your extension's <code>manifest.json</code>. The paths match the
+              <code>icons</code> folder in your download.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <section class="recent" aria-labelledby="recent-title" hidden>
+        <div class="recent-head">
+          <h2 class="panel-title" id="recent-title">Recent conversions</h2>
+          <button class="text-button recent-clear" type="button">Clear</button>
+        </div>
+        <p class="recent-note">
+          The last five downloads, kept only in this tab. Closing the tab clears them.
+        </p>
+        <ul class="recent-list"></ul>
+      </section>
+
+      <section class="donate" aria-labelledby="donate-title">
+        <div class="donate-art" aria-hidden="true">
+          <span class="donate-cup" data-sprite="cup"></span>
+          <span class="fuel-gauge"><span class="fuel-level"></span></span>
+        </div>
+        <div class="donate-copy">
+          <h2 class="donate-title" id="donate-title">Fuel the mission</h2>
+          <p>
+            Pureico is free, with no ads and no trackers. If it saved you time, you can buy the crew
+            a coffee.
+          </p>
+        </div>
+        <a
+          class="button button-kofi"
+          href="https://ko-fi.com/intercepth"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Support on Ko-fi <span aria-hidden="true">↗</span></a
+        >
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-season"></p>
+      <p class="footer-links">
+        <span>Pureico · MIT licensed</span>
+        <a href="https://github.com/intercepth/Pureico" target="_blank" rel="noopener noreferrer"
+          >Source</a
+        >
+        <a href="https://ko-fi.com/intercepth" target="_blank" rel="noopener noreferrer"
+          >Support on Ko-fi</a
+        >
+      </p>
+    </footer>
+
+    <div class="toast" role="status" hidden>
+      <span class="toast-text">A new version of Pureico is ready.</span>
+      <button class="chip toast-action" type="button">Reload</button>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

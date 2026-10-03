@@ -2,8 +2,7 @@ import { MAX_FILE_BYTES, MAX_SIDE } from '../core/limits';
 import { SNIFF_BYTES, sniffImage, type ImageKind } from '../core/sniff';
 
 export type Validation =
-  | { ok: true; kind: ImageKind; width?: number; height?: number }
-  | { ok: false; message: string };
+  { ok: true; kind: ImageKind; width?: number; height?: number } | { ok: false; message: string };
 
 export const ACCEPTED_LABEL = 'PNG, JPG, SVG and WebP';
 

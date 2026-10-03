@@ -1,0 +1,159 @@
+/* All movement is opt-in: nothing animates for people who prefer reduced motion. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .twinkle {
+    animation: twinkle 3.6s steps(2, jump-none) infinite;
+  }
+
+  .comet {
+    animation: comet 18s linear infinite 4s;
+  }
+
+  .hero-planet {
+    animation: bob 6s steps(4, jump-none) infinite alternate;
+  }
+
+  .c-star-bright {
+    animation: twinkle 4s steps(2, jump-none) infinite;
+  }
+
+  .dropzone:hover .dropzone-border rect,
+  .dropzone.is-dragging .dropzone-border rect {
+    animation: march 0.9s linear infinite;
+  }
+
+  .dropzone.is-dragging .dropzone-rocket {
+    animation: lift 0.5s steps(3) infinite alternate;
+  }
+
+  .dropzone:hover .flame-a,
+  .dropzone.is-dragging .flame-a {
+    animation: flicker-a 0.3s steps(1) infinite;
+  }
+
+  .dropzone:hover .flame-b,
+  .dropzone.is-dragging .flame-b {
+    animation: flicker-b 0.3s steps(1) infinite;
+  }
+
+  .moon-loader .sprite {
+    animation: phases 1.4s steps(8) infinite;
+  }
+
+  .download.just-downloaded .thanks-icon {
+    animation: burst 0.6s steps(4);
+  }
+
+  .download.is-ready .button-primary {
+    animation: pop 0.4s steps(3);
+  }
+
+  .fuel-level {
+    animation: refuel 3s steps(6) infinite alternate;
+  }
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0.15;
+  }
+}
+
+@keyframes comet {
+  0% {
+    opacity: 0;
+    transform: translate(80px, 120px);
+  }
+  1% {
+    opacity: 1;
+  }
+  7% {
+    opacity: 0;
+    transform: translate(560px, 300px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(560px, 300px);
+  }
+}
+
+@keyframes bob {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes march {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+
+@keyframes lift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes flicker-a {
+  0% {
+    visibility: visible;
+  }
+  50% {
+    visibility: hidden;
+  }
+}
+
+@keyframes flicker-b {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: visible;
+  }
+}
+
+@keyframes phases {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes burst {
+  0% {
+    transform: scale(0.4) rotate(0deg);
+  }
+  60% {
+    transform: scale(1.6) rotate(45deg);
+  }
+  100% {
+    transform: scale(1) rotate(90deg);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.94);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes refuel {
+  from {
+    width: 35%;
+  }
+  to {
+    width: 85%;
+  }
+}

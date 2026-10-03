@@ -31,7 +31,10 @@ function parseLength(value: string | null): number | undefined {
 }
 
 function parseViewBox(value: string | null) {
-  const parts = value?.trim().split(/[\s,]+/).map(Number);
+  const parts = value
+    ?.trim()
+    .split(/[\s,]+/)
+    .map(Number);
   if (!parts || parts.length !== 4 || parts.some((n) => !Number.isFinite(n))) return undefined;
   const [, , w, h] = parts;
   return w > 0 && h > 0 ? { w, h } : undefined;
@@ -66,8 +69,10 @@ export async function prepareSvg(file: Blob): Promise<PreparedSvg> {
 
   if (!viewBox && width && height) root.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
-  const rasterWidth = aspect >= 1 ? SVG_RASTER_SIDE : Math.max(1, Math.round(SVG_RASTER_SIDE * aspect));
-  const rasterHeight = aspect >= 1 ? Math.max(1, Math.round(SVG_RASTER_SIDE / aspect)) : SVG_RASTER_SIDE;
+  const rasterWidth =
+    aspect >= 1 ? SVG_RASTER_SIDE : Math.max(1, Math.round(SVG_RASTER_SIDE * aspect));
+  const rasterHeight =
+    aspect >= 1 ? Math.max(1, Math.round(SVG_RASTER_SIDE / aspect)) : SVG_RASTER_SIDE;
   root.setAttribute('width', String(rasterWidth));
   root.setAttribute('height', String(rasterHeight));
 
