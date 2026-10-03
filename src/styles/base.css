@@ -262,7 +262,7 @@ h1 {
 
 .constellation {
   position: absolute;
-  inset: 0;
+  inset: 0 26% 6% 0;
 }
 
 .constellation-art {
@@ -295,9 +295,9 @@ h1 {
 
 .hero-planet {
   position: absolute;
-  right: 6%;
-  bottom: -2%;
-  width: 34%;
+  right: 0;
+  bottom: -4%;
+  width: 32%;
   aspect-ratio: 1;
   filter: drop-shadow(0 10px 24px var(--accent-glow));
 }

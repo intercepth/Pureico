@@ -64,7 +64,8 @@ export function initOutputs(store: Store, controller: Controller): void {
     const selected = store.selected();
     for (const [size, card] of cards) {
       card.input.checked = state.icoSizes.includes(size);
-      const url = selected?.result?.urls.get(size);
+      // With nothing loaded yet, show Pureico's own planet so the sizes read as previews.
+      const url = selected ? selected.result?.urls.get(size) : '/favicon.svg';
       if (url) {
         if (card.img.getAttribute('src') !== url) card.img.src = url;
       } else {

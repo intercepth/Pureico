@@ -42,8 +42,11 @@ export function initFileList(store: Store, controller: Controller): void {
     return { li, select, thumb, info, status, statusKey: '' };
   };
 
+  const promises = $('.promises');
+
   const render = (state: State) => {
     section.hidden = state.items.length === 0;
+    promises.hidden = state.items.length > 0;
     const seen = new Set<string>();
     state.items.forEach((item, index) => {
       seen.add(item.id);

@@ -7,9 +7,10 @@ export type Validation =
 export const ACCEPTED_LABEL = 'PNG, JPG, SVG and WebP';
 
 export function formatBytes(bytes: number): string {
+  const trim = (value: string) => value.replace(/\.0$/, '');
   if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(bytes < 10 * 1024 ? 1 : 0)} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024) return `${trim((bytes / 1024).toFixed(bytes < 10 * 1024 ? 1 : 0))} KB`;
+  return `${trim((bytes / 1024 / 1024).toFixed(1))} MB`;
 }
 
 export function quoted(name: string): string {

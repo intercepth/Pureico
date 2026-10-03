@@ -475,7 +475,8 @@ export class Controller {
 
   /** Human-readable summary of an item for the file list. */
   describe(item: Item): string {
-    return `${item.width} × ${item.height} · ${kindLabel(item.kind)} · ${formatBytes(item.file.size)}`;
+    const dimensions = item.kind === 'svg' ? 'Vector' : `${item.width} × ${item.height}`;
+    return `${dimensions} · ${kindLabel(item.kind)} · ${formatBytes(item.file.size)}`;
   }
 
   private revokeResult(item: Item): void {

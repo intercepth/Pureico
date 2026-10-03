@@ -122,6 +122,7 @@
   color: var(--text);
   font-size: 0.95rem;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .privacy-badge {
@@ -137,6 +138,7 @@
 
 .badge-icon,
 .support-icon {
+  flex: none;
   width: 18px;
   height: 18px;
 }
@@ -1206,6 +1208,11 @@ input:focus-visible ~ .switch {
     gap: 6px;
   }
 
+  .privacy-badge {
+    gap: 6px;
+    padding: 6px 10px;
+  }
+
   .support-link {
     padding: 6px 10px;
   }
@@ -1238,4 +1245,32 @@ input:focus-visible ~ .switch {
     padding: 18px;
     border-radius: 20px;
   }
+}
+
+/* Empty-state promises */
+
+.promises {
+  display: grid;
+  gap: 12px;
+  padding: 4px 4px 0;
+  list-style: none;
+  color: var(--text-muted);
+  font-size: 0.94rem;
+}
+
+.promises li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.promises strong {
+  color: var(--text);
+}
+
+.promise-icon {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
 }
