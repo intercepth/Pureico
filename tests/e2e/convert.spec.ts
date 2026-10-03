@@ -76,6 +76,7 @@ test('bundles .ico, .icns and extension icons with a matching manifest snippet',
 
   const zip = await download(page, 'Download all (.zip)');
   expect(zip.name).toBe('star-icons.zip');
+  await expect(page.locator('.recent-name').first()).toHaveText('star-icons.zip');
   const files = unzip(zip.bytes);
   expect(Object.keys(files).sort()).toEqual([
     'icons/icon-128.png',
@@ -139,4 +140,24 @@ test('warns when the source is smaller than the largest output', async ({ page }
   await expect(page.locator('.messages[data-region="item"] .msg')).toContainText(
     'gives 64 px to work with',
   );
+});
+
+test('re-renders images that dropped out of the worker cache', async ({ page }) => {
+  const image = await png(page, 'wide.png', 300, 150, 'wide-bar');
+  await upload(
+    page,
+    Array.from({ length: 10 }, (_, i) => ({ ...image, name: `w${i}.png` })),
+  );
+  await expect(page.locator('.file')).toHaveCount(10);
+  await waitForDownloads(page);
+
+  await page.locator('.file-select').first().click();
+  await page.locator('[data-mode="crop"]').click();
+  await waitForDownloads(page);
+
+  const files = unzip((await download(page, 'Download all 10 (.zip)')).bytes);
+  const firstRow = (path: string) => decodeBmpEntry(parseIco(files[path])[0].data).rgba[8 * 4 + 3];
+  expect(firstRow('w0/w0.ico')).toBe(255); // cropped: no padding
+  expect(firstRow('w1/w1.ico')).toBe(0); // still fitted with padding
+  await expect(page.locator('.recent-item')).toHaveCount(5);
 });

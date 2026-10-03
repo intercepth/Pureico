@@ -86,6 +86,7 @@ export function initDownload(store: Store, controller: Controller, messages: Mes
     const options = status.busy ? null : state.downloads;
     if (options === rendered) return;
     rendered = options;
+    thanks.hidden = true;
     actions.replaceChildren(
       ...(options ?? []).map((option) => {
         const button = h(

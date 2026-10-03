@@ -433,18 +433,16 @@ export class Controller {
       .filter((i): i is Item => !!i?.result)
       .slice(-5);
     for (const item of items) {
-      const files = this.filesFor(item);
-      if (files.length === 0) continue;
-      let blob: Blob;
-      let fileName: string;
-      if (files.length === 1) {
-        [{ blob, path: fileName }] = files;
-      } else if (option.itemIds.length === 1 && option.fileName.endsWith('-icons.zip')) {
-        blob = option.blob;
-        fileName = option.fileName;
-      } else {
-        blob = await this.zip(files);
-        fileName = `${item.name}-icons.zip`;
+      let blob = option.blob;
+      let fileName = option.fileName;
+      let formats = labelsFor(fileName) ?? this.formatLabels();
+      if (option.itemIds.length > 1) {
+        // A batch zip holds every image; remember each image's own files instead.
+        const files = this.filesFor(item);
+        if (files.length === 0) continue;
+        if (files.length === 1) [{ blob, path: fileName }] = files;
+        else [blob, fileName] = [await this.zip(files), `${item.name}-icons.zip`];
+        formats = labelsFor(fileName) ?? this.formatLabels();
       }
       const thumbSource = item.result!.pngs.get(64) ?? item.result!.pngs.get(48);
       await this.recents.add(
@@ -454,7 +452,7 @@ export class Controller {
           fileName,
           mime: blob.type || 'application/octet-stream',
           size: blob.size,
-          formats: this.formatLabels(),
+          formats,
           createdAt: Date.now(),
           thumb: thumbSource ? await blobToDataUrl(thumbSource) : '',
         },
@@ -518,6 +516,14 @@ export function loadPrefs(): { formats?: OutputFormats; icoSizes?: number[] } {
   } catch {
     return {};
   }
+}
+
+/** Format labels for a single downloaded file, or `undefined` for a bundle of everything. */
+function labelsFor(fileName: string): string[] | undefined {
+  if (fileName.endsWith('.ico')) return ['ICO'];
+  if (fileName.endsWith('.icns')) return ['ICNS'];
+  if (fileName.endsWith('-extension.zip')) return ['Extension'];
+  return undefined;
 }
 
 function blobToDataUrl(blob: Blob): Promise<string> {

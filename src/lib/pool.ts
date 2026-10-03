@@ -16,7 +16,7 @@ export class WorkerError extends Error {
 interface Job {
   key: string;
   itemId?: string;
-  build: (needsSource: boolean) => { message: WorkerRequest; transfer: Transferable[] };
+  message: WorkerRequest;
   resolve: (value: WorkerResponse | null) => void;
   reject: (error: Error) => void;
 }
@@ -25,8 +25,6 @@ interface Slot {
   worker: Worker | null;
   queue: Job[];
   running: Job | null;
-  /** Items whose decoded image is cached inside this worker. */
-  loaded: Set<string>;
   assigned: number;
 }
 
@@ -38,8 +36,8 @@ function spawn(): Worker {
 }
 
 /**
- * A small pool of processing workers. Each item sticks to one worker so its decoded
- * image stays cached there; a newer request for an item replaces any queued one.
+ * A small pool of processing workers. Each item sticks to one worker so that worker's
+ * cache of decoded images is reused; a newer request for an item replaces any queued one.
  */
 export class WorkerPool {
   private readonly slots: Slot[];
@@ -51,7 +49,6 @@ export class WorkerPool {
       worker: null,
       queue: [],
       running: null,
-      loaded: new Set<string>(),
       assigned: 0,
     }));
   }
@@ -67,10 +64,9 @@ export class WorkerPool {
       const job: Job = {
         key,
         itemId: request.itemId,
-        build: (needsSource) => ({
-          message: { type: 'process', ...request, source: needsSource ? source : undefined },
-          transfer: [],
-        }),
+        // Blobs are passed by reference, so sending the source every time is cheap. The
+        // worker only decodes it when the image has dropped out of its cache.
+        message: { type: 'process', ...request, source },
         resolve: (value) => resolve(value as ProcessResult | null),
         reject,
       };
@@ -93,7 +89,7 @@ export class WorkerPool {
     return new Promise((resolve, reject) => {
       slot.queue.push({
         key: jobId,
-        build: () => ({ message: { type: 'zip', jobId, entries }, transfer: [] }),
+        message: { type: 'zip', jobId, entries },
         resolve: (value) => resolve((value as { buffer: ArrayBuffer }).buffer),
         reject,
       });
@@ -111,9 +107,7 @@ export class WorkerPool {
       job.resolve(null);
       return false;
     });
-    if (slot.loaded.delete(itemId)) {
-      slot.worker?.postMessage({ type: 'release', itemId } satisfies WorkerRequest);
-    }
+    slot.worker?.postMessage({ type: 'release', itemId } satisfies WorkerRequest);
   }
 
   private slotFor(itemId: string): Slot {
@@ -131,10 +125,8 @@ export class WorkerPool {
     const job = slot.queue.shift()!;
     slot.running = job;
     const worker = this.ensureWorker(slot);
-    const needsSource = job.itemId !== undefined && !slot.loaded.has(job.itemId);
-    const { message, transfer } = job.build(needsSource);
     try {
-      worker.postMessage(message, transfer);
+      worker.postMessage(job.message);
     } catch (error) {
       slot.running = null;
       job.reject(error instanceof Error ? error : new Error(String(error)));
@@ -153,7 +145,6 @@ export class WorkerPool {
         if (response.type === 'error') {
           job.reject(new WorkerError(response));
         } else {
-          if (response.type === 'result') slot.loaded.add(response.itemId);
           job.resolve(response);
         }
       }
@@ -164,7 +155,6 @@ export class WorkerPool {
       event.preventDefault();
       worker.terminate();
       slot.worker = null;
-      slot.loaded.clear();
       const job = slot.running;
       slot.running = null;
       job?.reject(

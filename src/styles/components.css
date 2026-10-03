@@ -587,6 +587,8 @@
 }
 
 .shape[data-mode='crop'] .crop-frame {
+  /* Let the corner handles show in full; the rounded stage still clips the dimmed area. */
+  overflow: visible;
   background: repeating-conic-gradient(var(--checker-a) 0 25%, var(--checker-b) 0 50%) 0 0 / 16px
     16px;
 }
@@ -1273,4 +1275,37 @@ input:focus-visible ~ .switch {
   width: 20px;
   height: 20px;
   margin-top: 2px;
+}
+
+/* Narrow screens: the privacy badge gets its own row under the brand. */
+
+@media (max-width: 560px) {
+  .site-header {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .brand {
+    margin-right: auto;
+  }
+
+  .header-actions {
+    display: contents;
+  }
+
+  .privacy {
+    order: 10;
+    flex-basis: 100%;
+  }
+
+  .privacy-badge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .privacy-panel {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
 }

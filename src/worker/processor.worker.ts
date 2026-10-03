@@ -12,7 +12,7 @@ import type {
   ZipRequest,
 } from '../core/protocol';
 import { ICNS_SIZES } from '../core/sizes';
-import { mipChain, renderSize, squareMaster } from './resample';
+import { drawScaled, mipChain, renderSize, squareMaster } from './resample';
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -25,13 +25,23 @@ class ProcessingError extends Error {
   }
 }
 
-const sources = new Map<string, ImageBitmap>();
+/**
+ * Decoded images, least recently used first. The cache is small and its images are
+ * capped in size, so a batch of large photos can't exhaust memory.
+ */
+const cache = new Map<string, ImageBitmap>();
+const CACHE_LIMIT = 3;
+const CACHE_SIDE = MASTER_MAX * 2;
+
+function forget(itemId: string): void {
+  cache.get(itemId)?.close();
+  cache.delete(itemId);
+}
 
 self.addEventListener('message', (event: MessageEvent<WorkerRequest>) => {
   const request = event.data;
   if (request.type === 'release') {
-    sources.get(request.itemId)?.close();
-    sources.delete(request.itemId);
+    forget(request.itemId);
     return;
   }
   const work = request.type === 'process' ? processItem(request) : zip(request);
@@ -65,22 +75,48 @@ async function decode(source: Blob | ImageBitmap): Promise<ImageBitmap> {
   }
 }
 
-async function processItem(request: ProcessRequest): Promise<void> {
-  let bitmap = sources.get(request.itemId);
-  if (!bitmap) {
-    if (!request.source) throw new ProcessingError('missing-source', 'Source image missing.');
-    bitmap = await decode(request.source);
-    if (bitmap.width > MAX_SIDE || bitmap.height > MAX_SIDE) {
-      const { width, height } = bitmap;
-      bitmap.close();
-      throw new ProcessingError('too-large', `${width} × ${height} px`);
-    }
-    if (bitmap.width === 0 || bitmap.height === 0) {
-      bitmap.close();
-      throw new ProcessingError('decode', 'The image has no pixels.');
-    }
-    sources.set(request.itemId, bitmap);
+/** Returns the cached image for an item, decoding (and shrinking) its source if needed. */
+async function sourceFor(request: ProcessRequest): Promise<ImageBitmap> {
+  const cached = cache.get(request.itemId);
+  if (cached) {
+    cache.delete(request.itemId);
+    cache.set(request.itemId, cached);
+    if (request.source instanceof ImageBitmap) request.source.close();
+    return cached;
   }
+  if (!request.source) throw new ProcessingError('missing-source', 'Source image missing.');
+
+  let bitmap = await decode(request.source);
+  const { width, height } = bitmap;
+  if (width === 0 || height === 0) {
+    bitmap.close();
+    throw new ProcessingError('decode', 'The image has no pixels.');
+  }
+  if (width > MAX_SIDE || height > MAX_SIDE) {
+    bitmap.close();
+    throw new ProcessingError('too-large', `${width} × ${height} px`);
+  }
+
+  const longSide = Math.max(width, height);
+  if (longSide > CACHE_SIDE) {
+    const scale = CACHE_SIDE / longSide;
+    const w = Math.max(1, Math.round(width * scale));
+    const h = Math.max(1, Math.round(height * scale));
+    const smaller = drawScaled(bitmap, 0, 0, width, height, w, h).transferToImageBitmap();
+    bitmap.close();
+    bitmap = smaller;
+  }
+
+  cache.set(request.itemId, bitmap);
+  for (const itemId of cache.keys()) {
+    if (cache.size <= CACHE_LIMIT) break;
+    forget(itemId);
+  }
+  return bitmap;
+}
+
+async function processItem(request: ProcessRequest): Promise<void> {
+  const bitmap = await sourceFor(request);
 
   const sizes = [...new Set(request.sizes)].sort((a, b) => b - a);
   const needsPixels = new Set<number>(request.icoSizes.filter((size) => size < 256));
