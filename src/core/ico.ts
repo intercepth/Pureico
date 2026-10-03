@@ -1,10 +1,10 @@
 export interface IcoImage {
   /** Width and height in pixels, 1–256. */
   size: number;
-  /** PNG encoding of the image, used for 256 px entries. */
-  png: Uint8Array;
-  /** Straight-alpha RGBA pixels (size × size × 4), used for BMP entries. */
-  rgba: Uint8Array | Uint8ClampedArray;
+  /** PNG encoding of the image; required for the 256 px entry. */
+  png?: Uint8Array;
+  /** Straight-alpha RGBA pixels (size × size × 4); required below 256 px. */
+  rgba?: Uint8Array | Uint8ClampedArray;
 }
 
 const ICONDIR_SIZE = 6;
@@ -30,9 +30,14 @@ export function encodeIco(images: readonly IcoImage[]): Uint8Array {
     }
   });
 
-  const payloads = sorted.map((img) =>
-    img.size === 256 ? img.png : encodeBmpIcon(img.rgba, img.size),
-  );
+  const payloads = sorted.map((img) => {
+    if (img.size === 256) {
+      if (!img.png) throw new Error('The 256 px entry needs PNG data.');
+      return img.png;
+    }
+    if (!img.rgba) throw new Error(`The ${img.size} px entry needs RGBA pixels.`);
+    return encodeBmpIcon(img.rgba, img.size);
+  });
   const headerSize = ICONDIR_SIZE + ICONDIRENTRY_SIZE * sorted.length;
   const total = payloads.reduce((sum, p) => sum + p.length, headerSize);
   const out = new Uint8Array(total);
