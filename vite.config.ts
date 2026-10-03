@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
-import { contentSecurityPolicy, serviceWorker } from './build/plugins';
+import { contentSecurityPolicy, serviceWorker } from './build/plugins.ts';
 
 export default defineConfig({
   build: {

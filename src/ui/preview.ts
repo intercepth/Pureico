@@ -47,29 +47,45 @@ export function initPreview(store: Store, messages: Messages): void {
   const zoom = $<HTMLImageElement>('.zoom-image');
   const tryButton = $<HTMLButtonElement>('.try-tab');
   const pageIcons = $$<HTMLLinkElement>('link[rel="icon"]');
-  const originalIcons = pageIcons.map((link) => ({ link, href: link.href, type: link.type }));
+  const originalIcons = pageIcons.map((link) => ({
+    link,
+    href: link.getAttribute('href') ?? '',
+    type: link.getAttribute('type'),
+  }));
   let trying = false;
+  let tabIconUrl: string | undefined;
+
+  const tabIconFor = () => {
+    const urls = store.selected()?.result?.urls;
+    return urls?.get(32) ?? urls?.get(16);
+  };
+
+  const showInTab = (url: string) => {
+    tabIconUrl = url;
+    pageIcons.forEach((link) => {
+      link.setAttribute('href', url);
+      link.setAttribute('type', 'image/png');
+    });
+  };
 
   const restoreIcons = () => {
     originalIcons.forEach(({ link, href, type }) => {
-      link.href = href;
-      link.type = type;
+      link.setAttribute('href', href);
+      if (type === null) link.removeAttribute('type');
+      else link.setAttribute('type', type);
     });
     trying = false;
+    tabIconUrl = undefined;
     tryButton.textContent = 'Try it in this tab';
   };
 
   tryButton.addEventListener('click', () => {
-    const item = store.selected();
-    const url = item?.result?.urls.get(32) ?? item?.result?.urls.get(16);
+    const url = tabIconFor();
     if (trying || !url) {
       restoreIcons();
       return;
     }
-    pageIcons.forEach((link) => {
-      link.href = url;
-      link.type = 'image/png';
-    });
+    showInTab(url);
     trying = true;
     tryButton.textContent = 'Restore Pureico’s icon';
   });
@@ -92,7 +108,12 @@ export function initPreview(store: Store, messages: Messages): void {
     }
 
     tryButton.disabled = !small;
-    if (!small && trying) restoreIcons();
+    if (trying) {
+      // Follow crop and size changes while the tab shows the preview.
+      const url = tabIconFor();
+      if (!url) restoreIcons();
+      else if (url !== tabIconUrl) showInTab(url);
+    }
 
     messages.sync('item', item ? itemNotices(item, state) : []);
   });
