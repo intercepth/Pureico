@@ -12,7 +12,7 @@ import type {
   ZipRequest,
 } from '../core/protocol';
 import { ICNS_SIZES } from '../core/sizes';
-import { drawScaled, mipChain, renderSize, squareMaster } from './resample';
+import { drawScaled, mipChain, renderSize, shapeTile, squareMaster } from './resample';
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -125,7 +125,10 @@ async function processItem(request: ProcessRequest): Promise<void> {
     needsPixels.add(32);
   }
 
-  const master = squareMaster(bitmap, request.crop, MASTER_MAX);
+  const square = squareMaster(bitmap, request.crop, MASTER_MAX);
+  const master = request.tile
+    ? shapeTile(square, request.tile, Math.min(MASTER_MAX, Math.max(square.width, sizes[0] ?? 0)))
+    : square;
   const chain = mipChain(master, sizes[sizes.length - 1] ?? 16);
   const pngs = new Map<number, Uint8Array>();
   const pixels = new Map<number, Uint8ClampedArray>();

@@ -58,6 +58,7 @@
           "Multi-size .ico files from 16 to 256 px",
           "macOS .icns files from 16 to 1024 px, including Retina sizes",
           "Browser extension PNGs with a Manifest V3 snippet",
+          "Rounded corners, the macOS app icon shape and background tiles",
           "Batch conversion of up to 20 images into one zip",
           "Runs offline; images never leave the device"
         ],
@@ -251,6 +252,58 @@
               </div>
             </div>
             <button class="text-button crop-reset" type="button" hidden>Reset crop</button>
+
+            <div class="tile">
+              <h3 class="sub-title" id="tile-title">Corners</h3>
+              <div class="tile-body">
+                <div class="tile-controls">
+                  <div class="segmented" role="radiogroup" aria-labelledby="tile-title">
+                    <button type="button" role="radio" aria-checked="true" data-corners="square">
+                      Square
+                    </button>
+                    <button type="button" role="radio" aria-checked="false" data-corners="rounded">
+                      Rounded
+                    </button>
+                    <button type="button" role="radio" aria-checked="false" data-corners="macos">
+                      macOS
+                    </button>
+                  </div>
+                  <p class="tile-note"></p>
+                  <div class="tile-slider" data-slider="radius" hidden>
+                    <label for="radius-input">Radius</label>
+                    <input id="radius-input" type="range" min="2" max="50" step="1" value="22" />
+                    <span class="tile-value" aria-hidden="true">22%</span>
+                  </div>
+                  <div class="tile-fill">
+                    <label class="tile-fill-toggle">
+                      <input class="tile-fill-input" type="checkbox" role="switch" />
+                      <span class="switch" aria-hidden="true"
+                        ><span class="switch-knob"></span
+                      ></span>
+                      Background
+                    </label>
+                    <input
+                      class="tile-color"
+                      type="color"
+                      value="#ffffff"
+                      aria-label="Background color"
+                    />
+                  </div>
+                  <div class="tile-slider" data-slider="padding" hidden>
+                    <label for="padding-input">Padding</label>
+                    <input id="padding-input" type="range" min="0" max="30" step="1" value="12" />
+                    <span class="tile-value" aria-hidden="true">12%</span>
+                  </div>
+                </div>
+                <figure class="tile-preview">
+                  <span class="tile-frame">
+                    <img class="tile-image" width="96" height="96" alt="" />
+                  </span>
+                  <figcaption>Result</figcaption>
+                </figure>
+              </div>
+              <button class="text-button tile-all" type="button" hidden>Apply to all images</button>
+            </div>
           </div>
         </section>
 
@@ -419,6 +472,15 @@
               Retina sizes, into one file you can use with tools such as electron-builder’s
               <code>mac.icon</code> setting or PyInstaller’s <code>--icon</code> option for PySide6
               and PyQt apps. For the sharpest result, start from a 1024 px image or an SVG.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Can Pureico round the corners of my icon?</summary>
+            <p>
+              Yes. Under Corners, choose Rounded and drag the radius slider (50% makes a circle), or
+              choose macOS for Apple’s app icon shape with its standard margin and a soft shadow. If
+              your logo has a transparent background, turn on Background to place it on a solid tile
+              and set the padding around it.
             </p>
           </details>
           <details class="faq-item">

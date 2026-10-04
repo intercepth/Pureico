@@ -1,5 +1,6 @@
 import type { Item, State, Store } from '../app/state';
 import { ICNS_SIZES } from '../core/sizes';
+import { imageScale } from '../core/tile';
 import { $, $$ } from '../lib/dom';
 import { quoted } from '../lib/validate';
 import type { Messages } from './messages';
@@ -31,7 +32,8 @@ function itemNotices(item: Item, state: State) {
         : Math.max(item.width, item.height),
     );
     const largest = largestOutput(state);
-    if (side < largest) {
+    // Margins and padding draw the image smaller than the icon, so it needs fewer pixels.
+    if (side < Math.round(largest * imageScale(item.tile))) {
       notices.push({
         kind: 'warning',
         key: `upscale-${item.id}`,

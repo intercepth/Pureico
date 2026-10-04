@@ -14,6 +14,7 @@ import { initOutputs } from './ui/outputs';
 import { initPreview } from './ui/preview';
 import { initRecent } from './ui/recent';
 import { initShape } from './ui/shape';
+import { initTile } from './ui/tile';
 
 function sessionStore(): Storage | null {
   try {
@@ -61,6 +62,7 @@ function start(): void {
   initDropzone((files) => void controller.addFiles(files));
   initFileList(store, controller);
   initShape(store, controller);
+  initTile(store, controller);
   initPreview(store, messages);
   initOutputs(store, controller);
   initDownload(store, controller, messages);

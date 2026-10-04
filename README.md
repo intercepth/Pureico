@@ -4,7 +4,7 @@
 
 [pureico.intercepth.dev](https://pureico.intercepth.dev)
 
-![Pureico converting a star icon, with dark and light browser-tab previews](docs/screenshot.png)
+![Pureico turning a square image into a macOS-style app icon, with dark and light browser-tab previews](docs/screenshot.png)
 
 Drop in a PNG, JPG, SVG or WebP and get a Windows `.ico`, a macOS `.icns` and a set of
 browser-extension PNGs. Nothing is uploaded: there is no backend, and the page is not allowed to
@@ -23,6 +23,10 @@ send data anywhere.
   snippet whose paths match the download.
 - **Auto-squaring**: rectangular images are centered on a transparent square, or cropped with a
   draggable, keyboard-friendly crop box.
+- **Corners and background tiles**: keep square corners, round them with an adjustable radius (up
+  to a circle), or use Apple's macOS icon shape with its standard margin, continuous corners and a
+  soft shadow. A background color with padding puts transparent logos on a solid tile. The mask
+  is drawn at full resolution before scaling, so even 16 px icons get smooth edges.
 - **Live preview** of the exact 16 × 16 bitmap in dark and light browser tabs, a pixel-level zoom,
   and a button to try the icon in Pureico's own tab.
 - **Batch conversion** of up to 20 images into a single zip, one folder per image.

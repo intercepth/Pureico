@@ -25,6 +25,8 @@ for (const theme of ['dark', 'light'] as const) {
 
       await upload(page, [await png(page, 'logo.png', 64, 64, 'square-star')]);
       await page.locator('label.toggle-row', { has: page.locator('input[value="ext"]') }).click();
+      await page.locator('[data-corners="rounded"]').click();
+      await page.locator('.tile-fill-toggle').click();
       await waitForDownloads(page);
       await page.locator('.faq-item').first().locator('summary').click();
       await audit(page);

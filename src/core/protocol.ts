@@ -1,5 +1,7 @@
 /** Messages exchanged between the page and the processing worker. */
 
+import type { TileStyle } from './tile';
+
 /** A crop rectangle in fractions of the source width and height (0–1). */
 export interface CropRect {
   x: number;
@@ -16,6 +18,8 @@ export interface ProcessRequest {
   source?: Blob | ImageBitmap;
   /** `null` fits the whole image onto a transparent square. */
   crop: CropRect | null;
+  /** Corners, fill and padding for the square; `null` leaves it as it is. */
+  tile: TileStyle | null;
   /** Every pixel size to render. */
   sizes: number[];
   /** Sizes to pack into the .ico; empty skips it. */

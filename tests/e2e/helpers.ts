@@ -97,3 +97,18 @@ export async function download(page: Page, label: string | RegExp) {
 export function unzip(bytes: Uint8Array): Record<string, Uint8Array> {
   return unzipSync(bytes);
 }
+
+/** Decodes a PNG in the browser and returns the RGBA values of the requested pixels. */
+export async function pngPixels(page: Page, png: Uint8Array, points: [number, number][]) {
+  return page.evaluate(
+    async ({ data, points }) => {
+      const blob = new Blob([new Uint8Array(data)], { type: 'image/png' });
+      const bitmap = await createImageBitmap(blob);
+      const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(bitmap, 0, 0);
+      return points.map(([x, y]) => [...ctx.getImageData(x, y, 1, 1).data]);
+    },
+    { data: [...png], points },
+  );
+}

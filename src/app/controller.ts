@@ -4,6 +4,7 @@ import { baseName, uniqueNames } from '../core/names';
 import type { CropRect } from '../core/protocol';
 import { EXTENSION_SIZES, ICNS_SIZES, ICO_SIZES, type OutputFormats } from '../core/sizes';
 import { kindLabel } from '../core/sniff';
+import { DEFAULT_TILE, isPlainTile, sameTile, type TileStyle } from '../core/tile';
 import { WorkerError, type WorkerPool } from '../lib/pool';
 import { prepareSvg, rasterizeSvg, SvgError } from '../lib/svg';
 import { formatBytes, quoted, validateFile } from '../lib/validate';
@@ -38,6 +39,8 @@ export class Controller {
   private readonly timers = new Map<string, ReturnType<typeof setTimeout>>();
   private downloadsToken = 0;
   private adding: Promise<void> = Promise.resolve();
+  /** The corner style chosen last, which newly added images start with. */
+  private lastTile: TileStyle = { ...DEFAULT_TILE };
 
   constructor(
     private readonly store: Store,
@@ -154,6 +157,7 @@ export class Controller {
       previewUrl,
       mode: 'fit',
       crop: defaultCrop(width, height),
+      tile: { ...this.lastTile },
       rev: 0,
       status: 'processing',
       notes,
@@ -200,6 +204,29 @@ export class Controller {
     if (!item) return;
     item.crop = crop;
     this.schedule(item, settle ? 0 : 140);
+  }
+
+  setTile(change: Partial<TileStyle>, settle: boolean): void {
+    const item = this.store.selected();
+    if (!item) return;
+    const tile = { ...item.tile, ...change };
+    if (sameTile(tile, item.tile)) return;
+    item.tile = tile;
+    this.lastTile = { ...tile };
+    this.schedule(item, settle ? 0 : 140);
+  }
+
+  /** Gives every image the selected image's corner style. */
+  applyTileToAll(): void {
+    const selected = this.store.selected();
+    if (!selected) return;
+    for (const item of this.state.items) {
+      if (sameTile(item.tile, selected.tile)) continue;
+      item.tile = { ...selected.tile };
+      if (item.status === 'error' && !item.result) continue;
+      this.schedule(item, 30);
+    }
+    this.store.update();
   }
 
   setFormats(formats: OutputFormats): void {
@@ -259,6 +286,7 @@ export class Controller {
           itemId: item.id,
           rev,
           crop: item.mode === 'crop' ? this.normalizedCrop(item) : null,
+          tile: isPlainTile(item.tile) ? null : { ...item.tile },
           sizes: [...sizes],
           icoSizes: formats.ico ? icoSizes : [],
           icns: formats.icns,

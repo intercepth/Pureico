@@ -1,5 +1,6 @@
 import type { ImageKind } from '../core/sniff';
 import type { OutputFormats } from '../core/sizes';
+import type { TileStyle } from '../core/tile';
 
 export type Mode = 'fit' | 'crop';
 
@@ -29,6 +30,7 @@ export interface Item {
   previewUrl: string;
   mode: Mode;
   crop: Crop;
+  tile: TileStyle;
   rev: number;
   status: 'processing' | 'ready' | 'error';
   error?: string;

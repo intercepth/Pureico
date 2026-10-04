@@ -1,4 +1,5 @@
 import type { CropRect } from '../core/protocol';
+import { tileLayout, traceRoundedSquare, type TileStyle } from '../core/tile';
 
 type Source = ImageBitmap | OffscreenCanvas;
 
@@ -69,6 +70,56 @@ export function squareMaster(
   const square = canvas(side, side);
   square.ctx.drawImage(fitted, Math.floor((side - w) / 2), Math.floor((side - h) / 2));
   return square.canvas;
+}
+
+/**
+ * Applies a tile style to the square master: an optional fill and padding, the corner
+ * shape and, for macOS, a soft shadow. Drawn at `side` px, which can be larger than the
+ * master, so the corners stay crisp even when the image itself is small.
+ */
+export function shapeTile(
+  master: OffscreenCanvas,
+  style: TileStyle,
+  side: number,
+): OffscreenCanvas {
+  const layout = tileLayout(style, side);
+  const { box, radius, smoothing } = layout;
+  const tile = canvas(side, side);
+  const ctx = tile.ctx;
+  const traceShape = () => {
+    ctx.beginPath();
+    traceRoundedSquare(ctx, box.x, box.y, box.size, radius, smoothing);
+  };
+
+  if (layout.fill) {
+    traceShape();
+    ctx.fillStyle = layout.fill;
+    ctx.fill();
+  }
+
+  // Whole pixels keep the image sharp; the shape's anti-aliased edge hides the rounding.
+  const x = Math.round(layout.image.x);
+  const y = Math.round(layout.image.y);
+  const size = Math.max(1, Math.round(layout.image.x + layout.image.size) - x);
+  const image =
+    size < master.width / 2
+      ? drawScaled(master, 0, 0, master.width, master.height, size, size)
+      : master;
+  ctx.drawImage(image, 0, 0, image.width, image.height, x, y, size, size);
+
+  // Keep only what lies inside the shape. Unlike clip(), this edge is anti-aliased everywhere.
+  ctx.globalCompositeOperation = 'destination-in';
+  traceShape();
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+
+  if (!layout.shadow) return tile.canvas;
+  const out = canvas(side, side);
+  out.ctx.shadowColor = layout.shadow.color;
+  out.ctx.shadowBlur = layout.shadow.blur;
+  out.ctx.shadowOffsetY = layout.shadow.offsetY;
+  out.ctx.drawImage(tile.canvas, 0, 0);
+  return out.canvas;
 }
 
 /** Successive halvings of the master, so each output size needs one final draw. */

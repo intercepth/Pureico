@@ -205,7 +205,7 @@ export function initShape(store: Store, controller: Controller): void {
     if (cropping && !drag) placeBox(item);
 
     note.textContent = square
-      ? 'Already square, so there’s nothing to adjust.'
+      ? 'Already square, so there’s nothing to crop.'
       : cropping
         ? 'Drag the square to choose what to keep. Drag a corner to resize.'
         : 'Centered on a transparent square, so nothing gets stretched.';
