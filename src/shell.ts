@@ -11,14 +11,15 @@ import { hydrateSprites } from './art/sprites';
 import { $ } from './lib/dom';
 import { registerServiceWorker } from './pwa/register';
 import { initThemeToggle } from './ui/header';
-import { initReveal } from './ui/motion';
+import { initParallax, initReveal } from './ui/motion';
 
-/** Setup shared by every page: art, sky, theme switch, scroll reveals and offline support. */
+/** Setup shared by every page: art, sky, theme switch, motion and offline support. */
 export function initShell(): void {
   hydrateSprites();
   renderStarfield($('.sky'));
   renderSeason();
   initThemeToggle();
   initReveal();
+  initParallax();
   registerServiceWorker();
 }

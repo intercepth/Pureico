@@ -34,6 +34,22 @@ test.describe('with motion allowed', () => {
     await expect(page.locator('.faq')).toHaveCSS('opacity', '1');
   });
 
+  test('the hero planet levitates and follows the pointer', async ({ page }) => {
+    await page.goto('/');
+    expect(await page.evaluate(animationNames)).toContain('levitate');
+
+    const art = page.locator('.hero-art');
+    const pointerX = () => art.evaluate((el) => Number(el.style.getPropertyValue('--px')));
+    const planetShift = () =>
+      page.locator('.hero-planet').evaluate((el) => getComputedStyle(el).translate);
+
+    await page.mouse.move(1270, 300);
+    await expect.poll(pointerX).toBeGreaterThan(0.9);
+    await expect.poll(planetShift).not.toBe('none');
+    await page.mouse.move(10, 300);
+    await expect.poll(pointerX).toBeLessThan(-0.9);
+  });
+
   test('does not widen the page while things animate in', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 800 });
     await page.goto('/');
@@ -91,6 +107,19 @@ test.describe('with reduced motion requested', () => {
     await expect(page.locator('.is-waiting')).toHaveCount(0);
     await expect(page.locator('.donate')).toHaveCSS('opacity', '1');
     await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
+  });
+
+  test('the hero planet holds still and ignores the pointer', async ({ page }) => {
+    await page.goto('/');
+    await page.mouse.move(1270, 300);
+    await page.waitForTimeout(300);
+    const state = await page.evaluate(() => ({
+      px: document.querySelector<HTMLElement>('.hero-art')!.style.getPropertyValue('--px'),
+      animations: document.getAnimations().map((a) => (a as CSSAnimation).animationName),
+    }));
+    expect(state.px).toBe('');
+    expect(state.animations).not.toContain('levitate');
+    expect(state.animations).not.toContain('hover-float');
   });
 
   test('keeps nothing moving on the other pages either', async ({ page }) => {

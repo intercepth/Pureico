@@ -54,6 +54,54 @@ export function initReveal(): void {
   }
 }
 
+/**
+ * Makes the hero art lean toward the pointer. It publishes the pointer's position as `--px` and
+ * `--py` (-1 at the left or top edge, 1 at the right or bottom); motion.css turns them into
+ * movement. Skipped for touch screens, which have no hovering pointer, and for reduced motion.
+ */
+export function initParallax(): void {
+  const art = document.querySelector<HTMLElement>('.hero-art');
+  if (!art || prefersReducedMotion()) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  let x = 0;
+  let y = 0;
+  let frame = 0;
+  let onScreen = true;
+
+  const publish = () => {
+    frame = 0;
+    art.style.setProperty('--px', x.toFixed(3));
+    art.style.setProperty('--py', y.toFixed(3));
+  };
+  const schedule = () => {
+    if (!frame && onScreen) frame = window.requestAnimationFrame(publish);
+  };
+
+  window.addEventListener(
+    'pointermove',
+    (event) => {
+      x = (event.clientX / window.innerWidth - 0.5) * 2;
+      y = (event.clientY / window.innerHeight - 0.5) * 2;
+      schedule();
+    },
+    { passive: true },
+  );
+  // The pointer left the page: settle back to the middle.
+  document.documentElement.addEventListener('pointerleave', () => {
+    x = 0;
+    y = 0;
+    schedule();
+  });
+  // No point updating while the hero is scrolled out of sight.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      onScreen = entries.some((entry) => entry.isIntersecting);
+      if (onScreen) schedule();
+    }).observe(art);
+  }
+}
+
 /** Plays an element's leaving animation (`.is-leaving`), then hides it. Instant without motion. */
 export function hideAnimated(el: HTMLElement): void {
   if (el.hidden || el.classList.contains('is-leaving')) return;
