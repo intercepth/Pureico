@@ -1,4 +1,4 @@
-Contact: mailto:mk7373xy@gmail.com
+Contact: mailto:contact@intercepth.dev
 Expires: 2027-10-01T00:00:00.000Z
 Preferred-Languages: en
 Canonical: https://pureico.intercepth.dev/.well-known/security.txt
