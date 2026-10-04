@@ -17,21 +17,22 @@ test('keeps recent conversions for the tab only', async ({ page, context }) => {
   await page.goto('/');
   await upload(page, [await png(page, 'logo.png', 128, 128, 'square-star')]);
   await waitForDownloads(page);
-  await download(page, 'Download .ico');
+  await download(page, 'Download icon.ico');
 
   const recent = page.locator('.recent-item');
   await expect(recent).toHaveCount(1);
-  await expect(recent.locator('.recent-name')).toHaveText('logo.ico');
-  await expect(recent.locator('.recent-name')).toHaveAttribute('title', 'logo.ico');
+  await expect(recent.locator('.recent-name')).toHaveText('icon.ico');
+  await expect(recent.locator('.recent-name')).toHaveAttribute('title', 'icon.ico');
+  await expect(recent.locator('.recent-source')).toHaveText('from logo');
   await expect(recent.locator('.recent-format')).toHaveText(['ICO']);
 
   await page.reload();
   await expect(page.locator('.recent-item')).toHaveCount(1);
   const [again] = await Promise.all([
     page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Download logo.ico again' }).click(),
+    page.getByRole('button', { name: 'Download icon.ico again' }).click(),
   ]);
-  expect(again.suggestedFilename()).toBe('logo.ico');
+  expect(again.suggestedFilename()).toBe('icon.ico');
 
   const otherTab = await context.newPage();
   await otherTab.goto('/');
@@ -45,7 +46,7 @@ test('never uploads anything or contacts other servers', async ({ page }) => {
   await page.goto('/');
   await upload(page, [await png(page, 'secret.png', 512, 512, 'square-star')]);
   await waitForDownloads(page);
-  await download(page, 'Download .ico');
+  await download(page, 'Download icon.ico');
 
   for (const { method, url } of requests) {
     expect(method, url).toBe('GET');
@@ -95,7 +96,7 @@ test('keeps working offline once loaded', async ({ page, context }) => {
 
   await upload(page, [await png(page, 'offline.png', 256, 256, 'square-star')]);
   await waitForDownloads(page);
-  const ico = await download(page, 'Download .ico');
-  expect(ico.name).toBe('offline.ico');
+  const ico = await download(page, 'Download icon.ico');
+  expect(ico.name).toBe('icon.ico');
   expect(ico.bytes.length).toBeGreaterThan(1000);
 });

@@ -19,7 +19,7 @@ function at(entry: ReturnType<typeof decodeBmpEntry>, x: number, y: number): Rgb
 }
 
 async function icoEntry(page: import('@playwright/test').Page, size: number) {
-  const entries = parseIco((await download(page, 'Download .ico')).bytes);
+  const entries = parseIco((await download(page, 'Download icon.ico')).bytes);
   return decodeBmpEntry(entries.find((e) => e.width === size)!.data);
 }
 
@@ -69,7 +69,7 @@ test("macOS style follows Apple's icon grid with a margin and a soft shadow", as
   await expect(page.locator('.tile-note')).toContainText('Apple’s app icon shape');
   await waitForDownloads(page);
 
-  const icns = parseIcns((await download(page, 'Download .icns')).bytes);
+  const icns = parseIcns((await download(page, 'Download icon.icns')).bytes);
   const ic10 = icns.chunks.find((c) => c.type === 'ic10')!.data;
   const [center, top, left, corner, above, below] = await pngPixels(page, ic10, [
     [512, 512],
@@ -131,7 +131,7 @@ test('applies one corner style to every image and keeps it for new ones', async 
   await waitForDownloads(page);
 
   const files = unzip((await download(page, 'Download all 2 (.zip)')).bytes);
-  for (const path of ['one/one.ico', 'two/two.ico']) {
+  for (const path of ['one/icon.ico', 'two/icon.ico']) {
     const icon = decodeBmpEntry(parseIco(files[path])[2].data);
     expect(at(icon, 1, 1)[3], path).toBe(0);
     expectColor(at(icon, 24, 24), PURPLE);

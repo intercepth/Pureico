@@ -51,6 +51,9 @@ function card(entry: RecentEntry, recents: RecentStore): HTMLLIElement {
         h('span', { class: 'recent-stem', text: stem }),
         h('span', { class: 'recent-ext', text: extension }),
       ),
+      // Generic names such as icon.ico need the image they came from to tell them apart.
+      !entry.fileName.startsWith(entry.name) &&
+        h('span', { class: 'recent-source', text: `from ${entry.name}` }),
       h(
         'span',
         { class: 'recent-info' },

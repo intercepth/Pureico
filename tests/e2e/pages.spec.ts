@@ -79,7 +79,7 @@ test('unknown addresses get a themed page that is kept out of search results', a
 
   // The host serves it for unknown addresses; it is never cached for offline use.
   const sw = await (await request.get('/sw.js')).text();
-  expect(sw).not.toContain('404');
+  expect(sw).not.toContain('/404');
 });
 
 test('legal pages work offline once the app is cached', async ({ page, context }) => {

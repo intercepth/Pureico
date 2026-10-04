@@ -1,6 +1,6 @@
 import { MAX_FILES } from '../core/limits';
 import { extensionIconPath, manifestIcons } from '../core/manifest';
-import { baseName, uniqueNames } from '../core/names';
+import { baseName, ICNS_FILE_NAME, icoFileName, uniqueNames } from '../core/names';
 import type { CropRect } from '../core/protocol';
 import { EXTENSION_SIZES, ICNS_SIZES, ICO_SIZES, type OutputFormats } from '../core/sizes';
 import { kindLabel } from '../core/sniff';
@@ -370,14 +370,15 @@ export class Controller {
       if (ready.length === 1) {
         const [item] = ready;
         const files = this.filesFor(item);
-        const single = (path: string) => files.find((f) => f.path === path);
-        const ico = single(`${item.name}.ico`);
-        const icns = single(`${item.name}.icns`);
+        const ico = files.find((f) => f.path.endsWith('.ico'));
+        const icns = files.find((f) => f.path.endsWith('.icns'));
         const extFiles = files.filter(
           (f) => f.path.startsWith('icons/') || f.path.endsWith('.json'),
         );
-        if (ico) options.push(this.option(`Download .ico`, ico.path, ico.blob, [item]));
-        if (icns) options.push(this.option(`Download .icns`, icns.path, icns.blob, [item]));
+        if (ico) options.push(this.option(`Download ${ico.path}`, ico.path, ico.blob, [item]));
+        if (icns) {
+          options.push(this.option(`Download ${icns.path}`, icns.path, icns.blob, [item]));
+        }
         if (extFiles.length) {
           const zip = await this.zip(extFiles);
           options.push(
@@ -429,9 +430,9 @@ export class Controller {
     if (!result) return [];
     const files: OutputFile[] = [];
     if (formats.ico && icoSizes.length > 0 && result.ico) {
-      files.push({ path: `${item.name}.ico`, blob: result.ico });
+      files.push({ path: icoFileName(icoSizes), blob: result.ico });
     }
-    if (formats.icns && result.icns) files.push({ path: `${item.name}.icns`, blob: result.icns });
+    if (formats.icns && result.icns) files.push({ path: ICNS_FILE_NAME, blob: result.icns });
     if (formats.ext) {
       for (const size of EXTENSION_SIZES) {
         const png = result.pngs.get(size);

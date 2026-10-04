@@ -15,6 +15,17 @@ export function baseName(fileName: string): string {
   return name;
 }
 
+/**
+ * The .ico file name: browsers look for favicon.ico, while Electron and Tauri apps look
+ * for icon.ico. Only sizes up to 48 px make it a favicon.
+ */
+export function icoFileName(sizes: readonly number[]): string {
+  return sizes.length > 0 && sizes.every((size) => size <= 48) ? 'favicon.ico' : 'icon.ico';
+}
+
+/** The name Electron and Tauri look for by default. */
+export const ICNS_FILE_NAME = 'icon.icns';
+
 /** De-duplicates names case-insensitively by appending -2, -3, … */
 export function uniqueNames(names: readonly string[]): string[] {
   const taken = new Set<string>();

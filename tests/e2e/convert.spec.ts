@@ -22,8 +22,8 @@ test('converts a PNG into a multi-size .ico, padding wide images onto a square',
   await waitForDownloads(page);
   await expect(page.locator('.file-name')).toHaveText('wide');
 
-  const ico = await download(page, 'Download .ico');
-  expect(ico.name).toBe('wide.ico');
+  const ico = await download(page, 'Download icon.ico');
+  expect(ico.name).toBe('icon.ico');
   const entries = parseIco(ico.bytes);
   expect(entries.map((e) => e.width)).toEqual([16, 32, 48, 256]);
   expect(entries.map((e) => e.format)).toEqual(['bmp', 'bmp', 'bmp', 'png']);
@@ -41,7 +41,7 @@ test('crop mode keeps only the chosen square', async ({ page }) => {
   await expect(page.locator('.crop-box')).toBeVisible();
   await waitForDownloads(page);
 
-  const small = decodeBmpEntry(parseIco((await download(page, 'Download .ico')).bytes)[0].data);
+  const small = decodeBmpEntry(parseIco((await download(page, 'Download icon.ico')).bytes)[0].data);
   expectPurple(small.rgba, (0 * 16 + 8) * 4); // no padding any more
   expectPurple(small.rgba, (15 * 16 + 8) * 4);
 });
@@ -56,7 +56,7 @@ test('rasterizes an SVG that only has a viewBox', async ({ page }) => {
   await waitForDownloads(page);
   await expect(page.locator('.file-info')).toContainText('Vector · SVG');
 
-  const entries = parseIco((await download(page, 'Download .ico')).bytes);
+  const entries = parseIco((await download(page, 'Download icon.ico')).bytes);
   const medium = decodeBmpEntry(entries[1].data);
   expect(medium.width).toBe(32);
   expect(medium.rgba[(0 * 32 + 16) * 4 + 3]).toBe(0);
@@ -79,13 +79,13 @@ test('bundles .ico, .icns and extension icons with a matching manifest snippet',
   await expect(page.locator('.recent-name').first()).toHaveText('star-icons.zip');
   const files = unzip(zip.bytes);
   expect(Object.keys(files).sort()).toEqual([
+    'icon.icns',
+    'icon.ico',
     'icons/icon-128.png',
     'icons/icon-16.png',
     'icons/icon-32.png',
     'icons/icon-48.png',
     'manifest-icons.json',
-    'star.icns',
-    'star.ico',
   ]);
 
   expect(JSON.parse(new TextDecoder().decode(files['manifest-icons.json']))).toEqual(
@@ -99,7 +99,7 @@ test('bundles .ico, .icns and extension icons with a matching manifest snippet',
     });
   }
 
-  const icns = parseIcns(files['star.icns']);
+  const icns = parseIcns(files['icon.icns']);
   expect(icns.chunks.map((c) => c.type)).toEqual([
     'is32',
     's8mk',
@@ -128,10 +128,31 @@ test('batch converts several images into one zip with a folder each', async ({ p
   const zip = await download(page, 'Download all 3 (.zip)');
   expect(zip.name).toBe('pureico-icons.zip');
   expect(Object.keys(unzip(zip.bytes)).sort()).toEqual([
-    'logo-2/logo-2.ico',
-    'logo/logo.ico',
-    'mark/mark.ico',
+    'logo-2/icon.ico',
+    'logo/icon.ico',
+    'mark/icon.ico',
   ]);
+});
+
+test('names files the way websites and app tools expect', async ({ page }) => {
+  await upload(page, [await png(page, 'Picsart_26-09-14_11-58-00-729.png', 64, 64, 'square-star')]);
+  await waitForDownloads(page);
+  await expect(page.locator('.download-actions button')).toHaveText([/^Download icon\.ico/]);
+
+  await page.locator('[data-preset="favicon"]').click();
+  await waitForDownloads(page);
+  expect((await download(page, 'Download favicon.ico')).name).toBe('favicon.ico');
+
+  await page.locator('label.toggle-row', { has: page.locator('input[value="icns"]') }).click();
+  await waitForDownloads(page);
+  await expect(page.locator('.download-actions button')).toHaveText([
+    /^Download all \(\.zip\)/,
+    /^Download favicon\.ico/,
+    /^Download icon\.icns/,
+  ]);
+  const zip = await download(page, 'Download all (.zip)');
+  expect(zip.name).toBe('Picsart_26-09-14_11-58-00-729-icons.zip');
+  expect(Object.keys(unzip(zip.bytes)).sort()).toEqual(['favicon.ico', 'icon.icns']);
 });
 
 test('warns when the source is smaller than the largest output', async ({ page }) => {
@@ -157,7 +178,7 @@ test('re-renders images that dropped out of the worker cache', async ({ page }) 
 
   const files = unzip((await download(page, 'Download all 10 (.zip)')).bytes);
   const firstRow = (path: string) => decodeBmpEntry(parseIco(files[path])[0].data).rgba[8 * 4 + 3];
-  expect(firstRow('w0/w0.ico')).toBe(255); // cropped: no padding
-  expect(firstRow('w1/w1.ico')).toBe(0); // still fitted with padding
+  expect(firstRow('w0/icon.ico')).toBe(255); // cropped: no padding
+  expect(firstRow('w1/icon.ico')).toBe(0); // still fitted with padding
   await expect(page.locator('.recent-item')).toHaveCount(5);
 });

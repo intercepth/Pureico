@@ -19,6 +19,9 @@ send data anywhere.
   versions can read them; the 256 px entry is stored as PNG.
 - **macOS `.icns`** with Apple's full 16–1024 px set, Retina sizes included, ready for Electron,
   PySide6, Tauri and other desktop apps.
+- **Ready-to-use file names**: `favicon.ico` for favicon sizes, `icon.ico` for app icons and
+  `icon.icns` for macOS, the names browsers, Electron and Tauri look for. Batch zips keep a folder
+  per image.
 - **Browser extension icons**: 16, 32, 48 and 128 px PNGs plus a copy-paste Manifest V3 `icons`
   snippet whose paths match the download.
 - **Auto-squaring**: rectangular images are centered on a transparent square, or cropped with a

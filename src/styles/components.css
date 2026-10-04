@@ -1326,6 +1326,14 @@ input:focus-visible ~ .switch {
   white-space: nowrap;
 }
 
+.recent-source {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-faint);
+  font-size: 0.82rem;
+}
+
 .recent-info {
   display: flex;
   flex-wrap: wrap;

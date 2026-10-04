@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { manifestIcons, manifestSnippet } from '../../src/core/manifest';
-import { baseName, uniqueNames } from '../../src/core/names';
+import { baseName, ICNS_FILE_NAME, icoFileName, uniqueNames } from '../../src/core/names';
 import { requiredSizes } from '../../src/core/sizes';
 import { CONSTELLATIONS, seasonRange, zodiacSeason } from '../../src/core/zodiac';
 
@@ -40,6 +40,17 @@ describe('uniqueNames', () => {
       'logo-3',
       'logo-2-2',
     ]);
+  });
+});
+
+describe('icon file names', () => {
+  it('calls favicon-sized .ico files favicon.ico and app icons icon.ico', () => {
+    expect(icoFileName([16, 32, 48])).toBe('favicon.ico');
+    expect(icoFileName([16])).toBe('favicon.ico');
+    expect(icoFileName([16, 32, 48, 256])).toBe('icon.ico');
+    expect(icoFileName([64])).toBe('icon.ico');
+    expect(icoFileName([])).toBe('icon.ico');
+    expect(ICNS_FILE_NAME).toBe('icon.icns');
   });
 });
 
