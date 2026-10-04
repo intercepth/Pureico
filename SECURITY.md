@@ -5,8 +5,8 @@ images people convert never leave their device. Even so, security reports are ve
 
 ## Reporting a vulnerability
 
-Please email **contact@intercepth.dev** with a description of the problem, the steps to reproduce it
-and the browser you used. Please do not open a public issue for security problems.
+Please email **pureico.contact@intercepth.dev** with a description of the problem, the steps to
+reproduce it and the browser you used. Please do not open a public issue for security problems.
 
 We aim to reply within a week and will keep you updated while we work on a fix.
 

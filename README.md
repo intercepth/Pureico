@@ -116,7 +116,7 @@ Pureico is free, with no ads and no trackers. If it saved you time, you can
 
 ## Contact
 
-Questions or feedback: [contact@intercepth.dev](mailto:contact@intercepth.dev)
+Questions or feedback: [pureico.contact@intercepth.dev](mailto:pureico.contact@intercepth.dev)
 
 ## License
 

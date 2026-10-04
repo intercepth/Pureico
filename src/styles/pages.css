@@ -133,6 +133,11 @@
   margin-top: 10px;
 }
 
+/* Long email addresses may break rather than widen the page on small screens or large text. */
+.legal-card a[href^='mailto:'] {
+  overflow-wrap: anywhere;
+}
+
 .legal-card ul {
   display: grid;
   gap: 6px;

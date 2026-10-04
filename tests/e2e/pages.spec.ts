@@ -11,7 +11,7 @@ test('privacy policy and terms are linked from every page', async ({ page }) => 
     await expect(footer.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/terms/');
     await expect(footer.getByRole('link', { name: 'Contact' })).toHaveAttribute(
       'href',
-      'mailto:contact@intercepth.dev',
+      'mailto:pureico.contact@intercepth.dev',
     );
   }
 });
@@ -43,7 +43,7 @@ test('publishes search and security metadata', async ({ page, request }) => {
   }
 
   const security = await (await request.get('/.well-known/security.txt')).text();
-  expect(security).toContain('Contact: mailto:contact@intercepth.dev');
+  expect(security).toContain('Contact: mailto:pureico.contact@intercepth.dev');
   const expires = new Date(security.match(/^Expires: (.+)$/m)![1]);
   expect(expires.getTime()).toBeGreaterThan(Date.now());
 
