@@ -1,8 +1,258 @@
-/* All movement is opt-in: nothing animates for people who prefer reduced motion. */
+/*
+ * All movement is opt-in: nothing animates for people who prefer reduced motion.
+ *
+ * Easing and timing tokens live in tokens.css. Rules of thumb used throughout:
+ * - Only opacity and transform are animated for entrances, so they stay on the compositor.
+ * - Entrances use `backwards` fill, so no animation lingers (and traps z-index) once they finish.
+ * - Whole sprites and panels move smoothly; sprite sheets (moon phases, flames) stay frame by frame.
+ */
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Page */
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-block-start: 24px;
+  }
+
+  @supports (interpolate-size: allow-keywords) {
+    :root {
+      interpolate-size: allow-keywords;
+    }
+  }
+
+  /* The theme switch and page-to-page navigation cross-fade instead of snapping. The browser's
+     own linear, additive blend is kept: an eased curve would dip in brightness mid-fade. */
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.45s;
+  }
+
+  /* Entrances: on load for what is on screen, on scroll (see src/ui/motion.ts) for the rest */
+
+  .sky {
+    animation: fade-in 1.6s ease-out backwards;
+  }
+
+  .site-header {
+    animation: fall var(--dur-slow) var(--ease-out) backwards;
+  }
+
+  [data-reveal] {
+    animation: rise var(--dur-slow) var(--ease-out) backwards;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+
+  /* Waiting below the fold; the script removes the class when it scrolls into view. */
+  [data-reveal].is-waiting {
+    animation: none;
+    opacity: 0;
+  }
+
+  /* Staggers what is visible on load. The script overrides these for sections revealed later. */
+  .hero-copy > :nth-child(2) {
+    --reveal-delay: 70ms;
+  }
+
+  .hero-copy > :nth-child(3) {
+    --reveal-delay: 140ms;
+  }
+
+  .hero-art {
+    --reveal-delay: 200ms;
+  }
+
+  .workspace > .panel:nth-child(1) {
+    --reveal-delay: 240ms;
+  }
+
+  .workspace > .panel:nth-child(2) {
+    --reveal-delay: 320ms;
+  }
+
+  /* Things that appear when the app has something to show */
+
+  .files,
+  .shape,
+  .manifest,
+  .thanks {
+    animation: rise-small var(--dur-slow) var(--ease-out) backwards;
+  }
+
+  .tile-slider,
+  .crop-box {
+    animation: fade-in var(--dur) ease-out backwards;
+  }
+
+  .file {
+    animation: slide-in var(--dur-slow) var(--ease-out) backwards;
+  }
+
+  .msg {
+    animation: drop-in var(--dur-slow) var(--ease-out) backwards;
+  }
+
+  .download-actions .button {
+    animation: pop var(--dur-slow) var(--ease-spring) backwards;
+  }
+
+  .download-actions .button:nth-child(2) {
+    animation-delay: 70ms;
+  }
+
+  .download-actions .button:nth-child(3) {
+    animation-delay: 140ms;
+  }
+
+  .toast {
+    animation: toast-in var(--dur-slow) var(--ease-spring) backwards;
+  }
+
+  .privacy-panel {
+    transform-origin: top right;
+    animation: panel-in var(--dur) var(--ease-out) backwards;
+  }
+
+  /* src/ui/motion.ts adds this class, then hides the panel once the animation ends. */
+  .privacy-panel.is-leaving {
+    animation: panel-out 0.16s ease-in forwards;
+  }
+
+  /* Hover, press and selection states ease instead of snapping */
+
+  .button,
+  .chip,
+  .privacy-badge,
+  .support-link,
+  .install-button,
+  .back-link,
+  .segmented button,
+  .toggle-row,
+  .size-card,
+  .file,
+  .recent-item,
+  .faq-item,
+  .msg-dismiss,
+  .file-remove,
+  .tile-color {
+    transition-property: background-color, border-color, color, box-shadow, transform, filter;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease-out);
+  }
+
+  a,
+  .text-button {
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .dropzone {
+    transition:
+      background-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+
+  .dropzone-border rect {
+    transition: stroke var(--dur) var(--ease-out);
+  }
+
+  /* `translate` composes with the `transform` animation the rocket plays while dragging. */
+  .dropzone-rocket {
+    transition: translate var(--dur-slow) var(--ease-spring);
+  }
+
+  .dropzone:hover .dropzone-rocket {
+    translate: 0 -5px;
+  }
+
+  .switch {
+    transition:
+      background-color var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+
+  .switch-knob {
+    transition:
+      transform var(--dur) var(--ease-spring),
+      background-color var(--dur) var(--ease-out);
+  }
+
+  .theme-knob {
+    transition: transform 0.4s var(--ease-spring);
+  }
+
+  @media (hover: hover) {
+    .button:hover:not(:disabled),
+    .chip:hover:not(:disabled),
+    .privacy-badge:hover,
+    .support-link:hover,
+    .install-button:hover,
+    .back-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary:hover:not(:disabled) {
+      box-shadow: 0 8px 22px -8px var(--accent-glow);
+    }
+
+    .button-kofi:hover {
+      box-shadow: 0 8px 22px -8px var(--star);
+    }
+
+    .toggle-row:hover,
+    .size-card:hover {
+      background: var(--surface-3);
+    }
+
+    .file:hover:not(.is-selected),
+    .faq-item:hover:not([open]) {
+      border-color: var(--border-strong);
+    }
+
+    .recent-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+  }
+
+  /* After the hover rules, so pressing wins while the pointer is still over the button. */
+  .button:active:not(:disabled) {
+    transform: translateY(1px) scale(0.985);
+    transition-duration: 80ms;
+  }
+
+  /* FAQ answers glide open and shut where the browser can animate <details> (Chromium for now). */
+  @supports selector(::details-content) {
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size var(--dur-slow) var(--ease-out),
+        content-visibility var(--dur-slow) allow-discrete;
+    }
+
+    .faq-item[open]::details-content {
+      block-size: auto;
+    }
+
+    .faq-item p {
+      opacity: 0;
+      transition: opacity var(--dur) ease-out;
+    }
+
+    .faq-item[open] p {
+      opacity: 1;
+      transition-delay: 0.12s;
+    }
+  }
+
+  /* Pixel art: whole sprites drift smoothly, sprite sheets and flames stay frame by frame */
+
   .twinkle {
-    animation: twinkle 3.6s steps(2, jump-none) infinite;
+    animation: twinkle 3.6s ease-in-out infinite alternate;
   }
 
   .comet {
@@ -11,11 +261,11 @@
 
   .hero-planet,
   .lost-planet {
-    animation: bob 6s steps(4, jump-none) infinite alternate;
+    animation: bob 6s ease-in-out infinite alternate;
   }
 
   .c-star-bright {
-    animation: twinkle 4s steps(2, jump-none) infinite;
+    animation: twinkle 4s ease-in-out infinite alternate;
   }
 
   .dropzone:hover .dropzone-border rect,
@@ -24,7 +274,7 @@
   }
 
   .dropzone.is-dragging .dropzone-rocket {
-    animation: lift 0.5s steps(3) infinite alternate;
+    animation: lift 0.6s ease-in-out infinite alternate;
   }
 
   .dropzone:hover .flame-a,
@@ -42,15 +292,99 @@
   }
 
   .download.just-downloaded .thanks-icon {
-    animation: burst 0.6s steps(4);
-  }
-
-  .download.is-ready .button-primary {
-    animation: pop 0.4s steps(3);
+    animation: burst 0.7s var(--ease-spring);
   }
 
   .fuel-level {
-    animation: refuel 3s steps(6) infinite alternate;
+    animation: refuel 3s ease-in-out infinite alternate;
+  }
+
+  /* Scroll-linked: the stars drift up slowly as the page scrolls (Chromium, Safari 26+). */
+  @supports (animation-timeline: scroll()) {
+    .sky {
+      /* Taller than the screen, so drifting never exposes the bottom edge. */
+      inset: 0 0 -12vh;
+      animation:
+        fade-in 1.6s ease-out backwards,
+        sky-drift linear both;
+      animation-timeline: auto, scroll(root);
+    }
+  }
+}
+
+@media print {
+  [data-reveal] {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fall {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes rise-small {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Slides in from the left only, so a scrolling list never grows a horizontal scrollbar. */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 18px);
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+}
+
+@keyframes panel-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+}
+
+@keyframes sky-drift {
+  to {
+    translate: 0 -12vh;
   }
 }
 
@@ -142,11 +476,9 @@
 }
 
 @keyframes pop {
-  0% {
-    transform: scale(0.94);
-  }
-  100% {
-    transform: scale(1);
+  from {
+    opacity: 0;
+    transform: scale(0.88);
   }
 }
 

@@ -48,6 +48,14 @@
   --font-display: 'Pixelify Sans Variable', ui-monospace, monospace;
   --font-body: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* Motion (applied in motion.css, and only when the visitor hasn't asked for less movement). */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 180ms;
+  --dur: 280ms;
+  --dur-slow: 700ms;
 }
 
 :root[data-theme='light'] {

@@ -40,6 +40,10 @@ send data anywhere.
   connection once it has loaded.
 - **Recent conversions**: the last five downloads stay available until the tab is closed.
 - **Dark and high-contrast light themes**, keyboard support and reduced-motion support.
+- **Smooth motion**: sections fade in as they scroll into view, the theme switch and page changes
+  cross-fade, FAQ answers glide open, and controls ease between states. It is all in
+  `src/styles/motion.css` (plus `src/ui/motion.ts` for scroll reveals) and switches off completely
+  when the system asks for reduced motion.
 
 ## Privacy
 
