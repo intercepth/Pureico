@@ -63,6 +63,59 @@
   color: var(--text-muted);
 }
 
+/* Page not found */
+
+.lost {
+  display: grid;
+  place-items: center;
+  min-height: 62vh;
+  padding-block: 24px 40px;
+}
+
+.lost-card {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  width: min(100%, 560px);
+  padding: 40px 32px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: var(--border-width) solid var(--border);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.lost-code {
+  display: flex;
+  align-items: center;
+  gap: 0.06em;
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 18vw, 7.5rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.lost-planet {
+  display: block;
+  width: 1.2em;
+  height: 1.2em;
+  filter: drop-shadow(0 8px 20px var(--accent-glow));
+}
+
+.lost-card h1 {
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
+}
+
+.lost-text {
+  max-width: 40ch;
+  color: var(--text-muted);
+}
+
+.lost-card .button {
+  margin-top: 6px;
+}
+
 /* Privacy policy and terms */
 
 .back-link {

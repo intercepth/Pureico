@@ -106,6 +106,17 @@ export const SPRITES = {
     '....bbbb....',
   ],
   check: ['......a', '.....aa', 'a...aa.', 'aa.aa..', '.aaa...', '..a....'],
+  download: [
+    '..aaa..',
+    '..aaa..',
+    '..aaa..',
+    'aaaaaaa',
+    '.aaaaa.',
+    '..aaa..',
+    '...a...',
+    '.......',
+    'aaaaaaa',
+  ],
   cup: [
     '................',
     '.....s...s......',

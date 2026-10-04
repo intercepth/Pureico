@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found · Pureico</title>
+    <meta
+      name="description"
+      content="This page doesn't exist. Head back to the Pureico converter."
+    />
+    <meta name="robots" content="noindex" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#111116" />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to the content</a>
+    <div class="sky" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Pureico home">
+        <span class="brand-mark" data-sprite="planet"></span>
+        <span class="brand-name">Pureico</span>
+      </a>
+      <div class="header-actions">
+        <a class="back-link" href="/">← Converter</a>
+        <button
+          class="theme-toggle"
+          type="button"
+          role="switch"
+          aria-checked="false"
+          aria-label="Light mode"
+        >
+          <span class="theme-track" aria-hidden="true">
+            <span class="theme-icon theme-moon" data-sprite="moon"></span>
+            <span class="theme-icon theme-sun" data-sprite="sun"></span>
+            <span class="theme-knob"></span>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <main class="lost" id="content">
+      <div class="lost-card">
+        <p class="lost-code">
+          <span class="visually-hidden">Error</span>
+          <span aria-hidden="true">4</span>
+          <span class="lost-planet" data-sprite="planet" aria-hidden="true"></span>
+          <span aria-hidden="true">4</span>
+          <span class="visually-hidden">404</span>
+        </p>
+        <h1>Lost in space</h1>
+        <p class="lost-text">
+          This page drifted out of orbit, or never existed. Check the address, or head back to the
+          converter.
+        </p>
+        <a class="button button-primary" href="/">Back to the converter</a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-season"></p>
+      <nav class="footer-links" aria-label="Footer">
+        <span>© 2026 Pureico</span>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="mailto:pureico.contact@intercepth.dev">Contact</a>
+        <a href="https://github.com/intercepth/Pureico" target="_blank" rel="noopener noreferrer"
+          >Source</a
+        >
+        <a href="https://ko-fi.com/intercepth" target="_blank" rel="noopener noreferrer"
+          >Support on Ko-fi</a
+        >
+        <a href="https://intercepth.dev/" target="_blank" rel="noopener noreferrer"
+          >More by Intercepth</a
+        >
+      </nav>
+    </footer>
+
+    <div class="toast" role="status" hidden>
+      <span class="toast-text">A new version of Pureico is ready.</span>
+      <button class="chip toast-action" type="button">Reload</button>
+    </div>
+
+    <script type="module" src="/src/legal.ts"></script>
+  </body>
+</html>

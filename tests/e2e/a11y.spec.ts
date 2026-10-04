@@ -32,8 +32,8 @@ for (const theme of ['dark', 'light'] as const) {
       await audit(page);
     });
 
-    test('the privacy and terms pages meet WCAG 2.2 AA checks', async ({ page }) => {
-      for (const path of ['/privacy/', '/terms/']) {
+    test('the privacy, terms and 404 pages meet WCAG 2.2 AA checks', async ({ page }) => {
+      for (const path of ['/privacy/', '/terms/', '/404.html']) {
         await page.goto(path);
         await expect(page.locator('h1')).toBeVisible();
         await audit(page);

@@ -22,6 +22,8 @@ test('keeps recent conversions for the tab only', async ({ page, context }) => {
   const recent = page.locator('.recent-item');
   await expect(recent).toHaveCount(1);
   await expect(recent.locator('.recent-name')).toHaveText('logo.ico');
+  await expect(recent.locator('.recent-name')).toHaveAttribute('title', 'logo.ico');
+  await expect(recent.locator('.recent-format')).toHaveText(['ICO']);
 
   await page.reload();
   await expect(page.locator('.recent-item')).toHaveCount(1);

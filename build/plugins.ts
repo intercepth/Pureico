@@ -43,6 +43,8 @@ const SKIP_PRECACHE = new Set([
   'sitemap.xml',
   'og-image.png',
   '.well-known/security.txt',
+  // Served by the host for unknown addresses; offline, the converter is the better fallback.
+  '404.html',
 ]);
 
 /** Adds the Content Security Policy to the built page. Dev keeps Vite's inline styles working. */

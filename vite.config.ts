@@ -12,6 +12,7 @@ export default defineConfig({
         main: page('./index.html'),
         privacy: page('./privacy/index.html'),
         terms: page('./terms/index.html'),
+        notFound: page('./404.html'),
       },
     },
   },

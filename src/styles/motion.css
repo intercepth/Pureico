@@ -9,7 +9,8 @@
     animation: comet 18s linear infinite 4s;
   }
 
-  .hero-planet {
+  .hero-planet,
+  .lost-planet {
     animation: bob 6s steps(4, jump-none) infinite alternate;
   }
 
