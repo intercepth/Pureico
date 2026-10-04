@@ -259,9 +259,55 @@
     animation: comet 18s linear infinite 4s;
   }
 
-  .hero-planet,
   .lost-planet {
     animation: bob 6s ease-in-out infinite alternate;
+  }
+
+  /*
+   * The hero planet levitates (rises and falls), drifts along a slow arc and leans toward the
+   * pointer (src/ui/motion.ts sets --px and --py, from -1 to 1). Each effect has its own element
+   * or property, so they add up instead of replacing each other. No rotation: it would make the
+   * pixel edges jagged.
+   */
+  .hero-planet {
+    translate: calc(var(--px, 0) * 22px) calc(var(--py, 0) * 14px);
+    transition: translate 0.7s var(--ease-out);
+    animation: levitate 6s ease-in-out infinite alternate;
+  }
+
+  .hero-planet .sprite {
+    animation: drift 11s ease-in-out infinite alternate;
+  }
+
+  .constellation {
+    translate: calc(var(--px, 0) * -10px) calc(var(--py, 0) * -6px);
+    transition: translate 0.9s var(--ease-out);
+  }
+
+  /* A soft shadow under the planet: it shrinks and fades as the planet rises. */
+  .hero-art::after {
+    content: '';
+    position: absolute;
+    right: 2%;
+    bottom: -10%;
+    width: 28%;
+    height: 5%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--accent-glow), transparent);
+    pointer-events: none;
+    translate: calc(var(--px, 0) * 22px) 0;
+    transition: translate 0.7s var(--ease-out);
+    animation: levitate-shadow 6s ease-in-out infinite alternate;
+  }
+
+  /* The rocket and the coffee cup hover gently while idle. */
+  .dropzone-rocket .sprite,
+  .donate-cup .sprite {
+    animation: hover-float 4.5s ease-in-out infinite alternate;
+  }
+
+  .donate-cup .sprite {
+    animation-delay: -2s;
   }
 
   .c-star-bright {
@@ -421,6 +467,48 @@
   }
   to {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes levitate {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-18px);
+  }
+}
+
+@keyframes levitate-shadow {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+}
+
+/* A slow arc to the left, up and to the right. `translate` leaves `transform` to the levitation. */
+@keyframes drift {
+  0% {
+    translate: -10px 2px;
+  }
+  50% {
+    translate: 0 -5px;
+  }
+  100% {
+    translate: 10px 2px;
+  }
+}
+
+@keyframes hover-float {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -5px;
   }
 }
 
