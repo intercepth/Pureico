@@ -1389,6 +1389,11 @@ input:focus-visible ~ .switch {
   box-shadow: var(--shadow);
 }
 
+/* Disabled only while the update is being applied. */
+.toast-action:disabled {
+  cursor: progress;
+}
+
 @media (max-width: 720px) {
   .support-text,
   .badge-text {
