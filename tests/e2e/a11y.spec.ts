@@ -3,6 +3,11 @@ import { expect, png, test, upload, waitForDownloads } from './helpers';
 
 const WCAG_AA = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
+// Axe measures contrast at whatever opacity an element has right now, so an audit that lands
+// mid-fade reports false failures, and sections still waiting to scroll into view are skipped.
+// Without motion the page is in its settled state straight away; the final styles are the same.
+test.use({ reducedMotion: 'reduce' });
+
 async function audit(page: import('@playwright/test').Page) {
   const results = await new AxeBuilder({ page }).withTags(WCAG_AA).analyze();
   const summary = results.violations.map(

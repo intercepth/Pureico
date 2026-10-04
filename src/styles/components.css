@@ -11,14 +11,6 @@
   border: var(--border-width) solid transparent;
   font-size: 1.05rem;
   text-decoration: none;
-  transition:
-    background-color 0.15s,
-    border-color 0.15s,
-    transform 0.1s;
-}
-
-.button:active:not(:disabled) {
-  transform: translateY(1px);
 }
 
 .button-primary {
@@ -251,7 +243,6 @@
   border-radius: 50%;
   background: var(--accent-soft);
   border: var(--border-width) solid var(--accent);
-  transition: transform 0.2s steps(4);
 }
 
 .theme-toggle[aria-checked='true'] .theme-knob {
@@ -270,7 +261,6 @@
   background: var(--surface-2);
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
 .dropzone-border {
@@ -1048,7 +1038,6 @@ fieldset:disabled {
   border-radius: var(--radius-pill);
   background: var(--surface-3);
   border: var(--border-width) solid var(--border-strong);
-  transition: background-color 0.15s;
 }
 
 .switch-knob {
@@ -1059,7 +1048,6 @@ fieldset:disabled {
   height: 16px;
   border-radius: 6px;
   background: var(--text-muted);
-  transition: transform 0.18s steps(3);
 }
 
 input:checked ~ .switch {

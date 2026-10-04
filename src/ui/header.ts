@@ -1,4 +1,5 @@
 import { $ } from '../lib/dom';
+import { cancelHide, hideAnimated, prefersReducedMotion } from './motion';
 
 type Theme = 'dark' | 'light';
 const THEME_KEY = 'pureico:theme';
@@ -18,7 +19,8 @@ export function initThemeToggle(): void {
   const sync = () => toggle.setAttribute('aria-checked', String(currentTheme() === 'light'));
   applyTheme(currentTheme());
   sync();
-  toggle.addEventListener('click', () => {
+  // Decided when it runs, not when clicked: a view transition applies it a frame later.
+  const swap = () => {
     const next: Theme = currentTheme() === 'light' ? 'dark' : 'light';
     applyTheme(next);
     try {
@@ -27,6 +29,14 @@ export function initThemeToggle(): void {
       /* the choice just won't persist */
     }
     sync();
+  };
+  toggle.addEventListener('click', () => {
+    // Cross-fades the whole page where supported; everywhere else the theme just switches.
+    if (typeof document.startViewTransition === 'function' && !prefersReducedMotion()) {
+      document.startViewTransition(swap);
+    } else {
+      swap();
+    }
   });
 }
 
@@ -36,20 +46,27 @@ export function initPrivacyPanel(): void {
   const status = $('.offline-status', panel);
   const statusText = $('.status-text', status);
 
+  // The panel stays in the page for a moment while it animates out, so `aria-expanded` is the truth.
+  const isOpen = () => badge.getAttribute('aria-expanded') === 'true';
   const setOpen = (open: boolean) => {
-    panel.hidden = !open;
     badge.setAttribute('aria-expanded', String(open));
+    if (open) {
+      cancelHide(panel);
+      panel.hidden = false;
+    } else {
+      hideAnimated(panel);
+    }
   };
-  badge.addEventListener('click', () => setOpen(!!panel.hidden));
+  badge.addEventListener('click', () => setOpen(!isOpen()));
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !panel.hidden) {
+    if (event.key === 'Escape' && isOpen()) {
       setOpen(false);
       badge.focus();
     }
   });
   document.addEventListener('pointerdown', (event) => {
     const target = event.target as Node;
-    if (!panel.hidden && !panel.contains(target) && !badge.contains(target)) setOpen(false);
+    if (isOpen() && !panel.contains(target) && !badge.contains(target)) setOpen(false);
   });
 
   let offlineReady = false;
