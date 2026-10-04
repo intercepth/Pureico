@@ -1,14 +1,23 @@
 version: 2
 updates:
+  # One bundled pull request per month for npm packages.
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     groups:
-      dev-dependencies:
-        dependency-type: development
+      npm-packages:
+        patterns: ['*']
+    ignore:
+      # Type definitions should match the Node.js version the project runs on (see .node-version).
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
 
+  # One bundled pull request per month for the GitHub Actions used in CI.
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
+    groups:
+      github-actions:
+        patterns: ['*']
