@@ -13,6 +13,10 @@ test('privacy policy and terms are linked from every page', async ({ page }) => 
       'href',
       'mailto:pureico.contact@intercepth.dev',
     );
+    const more = footer.getByRole('link', { name: 'More by Intercepth' });
+    await expect(more).toHaveAttribute('href', 'https://intercepth.dev/');
+    await expect(more).toHaveAttribute('target', '_blank');
+    await expect(more).toHaveAttribute('rel', 'noopener noreferrer');
   }
 });
 
@@ -51,7 +55,11 @@ test('publishes search and security metadata', async ({ page, request }) => {
   const jsonLd = JSON.parse(
     (await page.locator('script[type="application/ld+json"]').textContent()) ?? '',
   );
-  expect(jsonLd).toMatchObject({ '@type': 'WebApplication', name: 'Pureico' });
+  expect(jsonLd).toMatchObject({
+    '@type': 'WebApplication',
+    name: 'Pureico',
+    creator: { name: 'Intercepth', url: 'https://intercepth.dev/' },
+  });
 });
 
 test('legal pages work offline once the app is cached', async ({ page, context }) => {

@@ -118,6 +118,9 @@ Pureico is free, with no ads and no trackers. If it saved you time, you can
 
 Questions or feedback: [pureico.contact@intercepth.dev](mailto:pureico.contact@intercepth.dev)
 
+Pureico is made by [Intercepth](https://intercepth.dev). See more projects at
+[intercepth.dev](https://intercepth.dev).
+
 ## License
 
 [MIT](LICENSE) © 2026 Intercepth. Bundled fonts and libraries keep their own licenses; see
